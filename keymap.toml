@@ -144,7 +144,7 @@ keymap = [
 	{ on = [ "g", "c" ],       run = "cd ~/.config",     desc = "Go to config" },
 	{ on = [ "g", "u" ],       run = "cd /media/UUI/",     desc = "Go to Mobile disk" },
 	{ on = [ "g", "d" ],       run = "cd ~/down",   desc = "Go to downloads" },
-	{ on = [ "g", "t" ],       run = "cd /home/wrq/deskenv/dev/toolscript",          desc = "Go to tool" },
+	{ on = [ "g", "t" ],       run = "cd ~/tool/",          desc = "Go to tool" },
 	{ on = [ "g", "o" ],       run = "cd ~/video",          desc = "Go to video" },
 	{ on = [ "g", "i" ],       run = "cd ~/Images",          desc = "Go to image" },
 	{ on = [ "g", "r" ],       run = "cd /",          desc = "Go to /" },
