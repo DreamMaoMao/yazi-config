@@ -1,0 +1,110 @@
+[manager]
+layout         = [ 1, 4, 3 ]
+sort_by        = "extension"
+sort_sensitive = true
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "none"
+show_hidden    = false
+show_symlink   = true
+scrolloff      = 0
+
+[preview]
+tab_size        = 2
+max_width       = 600
+max_height      = 900
+cache_dir       = ""
+ueberzug_scale  = 1
+ueberzug_offset = [ 0, 0, 0, 0 ]
+
+[opener]
+folder = [
+	{ run = '$EDITOR "$1"', block = true,desc = "neovim", for = "linux" },
+	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo" , for = "linux" },
+	{ run = 'konsole --workdir "$@"',orphan = true, desc = "konsole" , for = "linux" },
+	# { run = '''konsole -e "nvim  "$@"" ''',orphan = true, desc = "neovim" , for = "linux" },
+	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
+	{ run = 'basename "$@" | xargs -I {} tar --use-compress-program=pigz -cf ~/down/{}.tar.gz {}',orphan = true, desc = "archive" , for = "linux"  },
+
+]
+archive = [
+	# { run = 'basename "$@" | xargs tar xf ', orphan = true, desc = "tar xf" , for = "linux" },
+	# { run = 'basename "$@" | xargs tar xzf ', orphan = true, desc = "tar xzf" , for = "linux" },
+	# { run = 'unzip "$1"', orphan = true, desc = "unzip" , for = "linux" },
+	# { run = 'unar "$1"', orphan = true, desc = "unrar" , for = "linux" },
+	{ run = 'ouch decompress "$1" ', orphan = true, desc = "decompress" , for = "linux" },
+]
+
+text = [
+	{ run = '$EDITOR "$1"', block = true,desc = "neovim", for = "linux" },
+	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
+	{ run = 'gedit "$@" ', block = true, orphan = true, desc = "gedit"  , for = "linux"},
+	# { run = 'nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
+	{ run = 'zathura "$@"',orphan = true, desc = "zathura"  , for = "linux" },
+	# { run = '''konsole -e "nvim  "$@"" ''',orphan = true, desc = "neovim" , for = "linux" },
+]
+image = [
+	{ run = 'eog "$@"',  orphan = true, desc = "eog" , for = "linux"},
+	{ run = 'feh "$@"',  orphan = true, desc = "feh" , for = "linux"},
+]
+video = [
+	{ run = 'smplayer "$@" ', orphan = true, desc = "smplayer" , for = "linux" },
+	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
+
+]
+audio = [
+	{ run = 'smplayer "$@" ' , orphan = true, desc = "smplayer" , for = "linux"},
+]
+
+document = [
+	{ run = 'xdg-open "$@"', orphan = true, desc = "xdg-open" , for = "linux" },
+	{ run = 'zathura "$@" ' , orphan = true, desc = "zathura" , for = "linux"},
+	{ run = 'evince "$@" ' , orphan = true, desc = "evince" , for = "linux"},
+	{ run = 'foliate "$@" ' , orphan = true, desc = "foliate" , for = "linux"},
+]
+
+fallback = [
+	{ run = 'xdg-open "$@"', orphan = true, desc = "xdg-open" , for = "linux" },
+	{ run = 'GDK_BACKEND=x11 nemo "$@"', orphan = true, desc = "nemo" , for = "linux" },	
+	{ run = 'konsole --workdir "$@"',orphan = true, desc = "konsole" , for = "linux" },
+]
+
+[open]
+rules = [
+	{ name = "*/", use = ["folder"] },
+
+	{ mime = "text/*", use = ["text"] },
+	{ mime = "image/*", use = ["image"] },
+	{ mime = "video/*", use = ["video"] },
+	{ mime = "application/octet-stream",use = ["video"]},
+	{ mime = "audio/*", use = ["audio"] },
+	{ mime = "inode/x-empty", use = ["text"] },
+	{ mime = "application/json", use = ["text"] },
+
+	{ mime = "application/zip", use = ["archive"] },
+	{ mime = "application/gzip", use = ["archive"] },
+	{ mime = "application/x-bzip", use = ["archive"] },
+	{ mime = "application/x-bzip2", use = ["archive"] },
+	{ mime = "application/x-tar", use = ["archive"] },
+	{ mime = "application/x-7z-compressed", use = ["archive"] },
+	{ mime = "application/x-rar", use = ["archive"] },
+	{ mime = "application/pdf", use = ["document"] },
+	{ mime = "application/epub+zip", use = ["document"] },
+	{ mime = "application/x-mobipocket-ebook", use = ["document"] },
+
+	{ mime = "*", use = ["fallback"] },
+]
+
+[tasks]
+micro_workers = 5
+macro_workers = 10
+bizarre_retry = 5
+
+[log]
+enabled = false
+
+
+[plugin]
+prepend_previewers = [
+  { name = "*.md", run = "glow" },
+]
