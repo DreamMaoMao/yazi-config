@@ -2,14 +2,13 @@
 
 keymap = [
 
-	{ on = [ "u","a"], run = "plugin bookmarks-persistence --args='save'", desc = "Save current position as a bookmark" },
-	{ on = [ "u","g"], run = "plugin bookmarks-persistence --args='jump'", desc = "Jump to a bookmark" },
-	{ on = [ "u","d"], run = "plugin bookmarks-persistence --args='delete'", desc = "Delete a bookmark" },
-	{ on = [ "u","D"], run = "plugin bookmarks-persistence --args='delete_all'", desc = "Delete all bookmarks" },
+	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Save current position as a bookmark" },
+	{ on = [ "u","g" ], run = "plugin bookmarks --args='jump'", desc = "Jump to a bookmark" },
+	{ on = [ "u","d" ], run = "plugin bookmarks --args='delete'", desc = "Delete a bookmark" },
+	{ on = [ "u","D" ],	run = "plugin bookmarks --args='delete_all'", desc = "Delete all bookmarks" },
 
-	{ on = [ "i"], run = "plugin keyjump --args=''", desc = "keyjump once mode" },
-	# { on = [ "s"], run = "plugin keyjump --args='global'", desc = "keyjump select mode" },
-	{ on = ["s"], 		run = "plugin searchjump --args=''", desc = "searchjump" },
+	{ on = [ "i" ], run = "plugin easyjump --args=''", desc = "easyjump" },
+	{ on = [ "s" ], run = "plugin searchjump --args=''", desc = "searchjump" },
 
 	# Linemode
 	{ on = [ "z", "s" ], run = "linemode size",        desc = "Set linemode to size" },
@@ -96,10 +95,10 @@ keymap = [
 
 
 	# Copy
-	{ on = [ "c", "c" ], run = "copy path",             desc = "Copy the absolute path" },
-	{ on = [ "c", "d" ], run = "copy dirname",          desc = "Copy the path of the parent directory" },
-	{ on = [ "c", "f" ], run = "copy filename",         desc = "Copy the name of the file" },
-	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "Copy the name of the file without the extension" },
+	{ on = [ "c", "c" ], run = "copy path",             desc = "cp absolute path" },
+	{ on = [ "c", "d" ], run = "copy dirname",          desc = "cp parent path" },
+	{ on = [ "c", "f" ], run = "copy filename",         desc = "cp filename" },
+	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "cp filename without ext" },
 
 
 	# Sort
@@ -264,5 +263,22 @@ keymap = [
 
 	# Filtering
 	{ on = [ "/" ], run = "filter", desc = "Apply a filter for the help items" },
-
 ]
+
+
+[[manager.prepend_keymap]]
+on  = [ "c","l" ]
+run = ['''
+	shell --confirm 'for path in "$@"; do echo -en "file://${path}\n"; done | wl-copy -t text/uri-list; wl-paste | xclip -i -selection clipboard -rmlastnl -t text/uri-list'
+''' ]
+desc = "clip to wayland clipboard"
+
+[[manager.prepend_keymap]]
+on  = [ "c","o" ]
+run = ['''
+	shell --confirm 'for path in "$@"; do  echo -en "file://${path}\n"; done |  xclip -i -selection clipboard -rmlastnl -t text/uri-list'
+''' ]
+desc = "clip to x11 clipboard"
+
+
+

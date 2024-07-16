@@ -228,13 +228,13 @@ local record_match_file = ya.sync(function(state, patterns,re_match)
 		end	
 
 		-- record match file from current window
-		update_match_table("current",Folder:by_kind(Folder.CURRENT), covert_parttern)
+		update_match_table("current",cx.active.current, covert_parttern)
 
 		if not state.opt_only_current then
 			-- record match file from parent window
-			update_match_table("parent", Folder:by_kind(Folder.PARENT), covert_parttern)
+			update_match_table("parent", cx.active.parent, covert_parttern)
 			-- record match file from preview window
-			update_match_table("preview", Folder:by_kind(Folder.PREVIEW), covert_parttern)
+			update_match_table("preview", cx.active.preview.folder, covert_parttern)
 		end
 	end	
 
@@ -267,7 +267,7 @@ local record_match_file = ya.sync(function(state, patterns,re_match)
 	end
 
 	-- flush page
-	if Folder:by_kind(Folder.PREVIEW) then
+	if cx.active.preview.folder then
 		ya.manager_emit("peek", { force = true })
 	end
 	ya.render()
@@ -278,7 +278,7 @@ end)
 local toggle_ui = ya.sync(function(st)
 	if st.highlights or st.mode then
 		File.highlights, Status.mode, st.highlights, st.mode = st.highlights, st.mode, nil, nil
-		if Folder:by_kind(Folder.PREVIEW) then
+		if cx.active.preview.folder then
 			ya.manager_emit("peek", { force = true })
 		end
 		ya.render()
@@ -313,7 +313,7 @@ local toggle_ui = ya.sync(function(st)
 		}
 	end
 
-	if Folder:by_kind(Folder.PREVIEW) then
+	if cx.active.preview.folder then
 		ya.manager_emit("peek", { force = true })
 	end
 end)
@@ -344,7 +344,7 @@ local set_target_str = ya.sync(function(state, patterns, final_input_str,re_matc
 	local url = check_key_is_lable(final_input_str)
 	if url then -- if the last str match is a lable key, not a searchchar,toggle jump action
 		if not state.args_autocd and  state.match[url].pane == "current" then-- if target file in current pane, use `arrow` instead of`reveal` tosupport select mode
-			local folder = Folder:by_kind(Folder.CURRENT)
+			local folder = cx.active.current
 			ya.manager_emit("arrow",{ state.match[url].cursorPos - folder.cursor - 1 + folder.offset})
 		elseif state.args_autocd and state.match[url].isdir then
 			ya.manager_emit("cd",{ url })
