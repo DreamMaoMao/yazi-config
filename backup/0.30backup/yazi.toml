@@ -109,3 +109,10 @@ enabled = false
 prepend_previewers = [
   { name = "*.md", run = "glow" },
 ]
+
+fetchers = [
+	# Mimetype
+	{ id = "mime", name = "*", run = "mime", if = "!mime", prio = "high" },
+	{ id = "git", name = "*", run = "git", prio = "normal" },
+	{ id = "current-size", name = "*", run = "current-size", prio = "normal" },
+]

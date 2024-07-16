@@ -31,7 +31,7 @@ count_selected = { fg = "#000000", bg = "#e6a0b3" }
 
 # Border
 border_symbol = "│"
-border_style  = { fg = "#6c6666" }
+border_style  = { fg = "#9a8774" }
 
 # Highlighting
 syntect_theme = "~/.config/yazi/bat-theme/Gruvbox-N.tmTheme"
