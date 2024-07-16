@@ -16,6 +16,7 @@ keymap = [
 	{ on = [ "z", "m" ], run = "linemode mtime",       desc = "Set linemode to mtime" },
 	{ on = [ "z", "c" ], run = "linemode ctime",        desc = "Set linemode to ctime" },
 	{ on = [ "z", "n" ], run = "linemode none",        desc = "Set linemode to none" },
+	{ on = [ "z", "o" ], run = "linemode owner",       desc = "Set linemode to owner" },
 
 	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/master/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon x11" },
 	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/master/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon wayland" },
@@ -77,8 +78,8 @@ keymap = [
 	{ on = [ "D" ],         run = "remove --permanently",   desc = "Permanently delete the files" },
 	{ on = [ "a" ],         run = "create",                 desc = "Create a file or directory (ends with / for directories)" },
 	{ on = [ "r" ],         run = "rename",                 desc = "Rename a file or directory" },
-	{ on = [ ";" ],         run = "shell",                  desc = "Run a shell command" },
-	{ on = [ ":" ],         run = "shell --block",          desc = "Run a shell command (block the UI until the command finishes)" },
+	{ on = [ ";" ],         run = "shell --interactive",                  desc = "Run a shell command" },
+	{ on = [ ":" ],         run = "shell --block --interactive",          desc = "Run a shell command (block the UI until the command finishes)" },
 	{ on = [ "." ],         run = "hidden toggle",          desc = "Toggle the visibility of hidden files" },
 
 	# Filter & file

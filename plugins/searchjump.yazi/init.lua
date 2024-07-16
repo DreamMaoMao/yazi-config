@@ -275,6 +275,14 @@ local record_match_file = ya.sync(function(state, patterns,re_match)
 	return exist_match
 end)
 
+local switch_entity_hightlights = ya.sync(function(st,fn)
+	local inc_backup = Entity._inc
+	Entity._inc = st.highlights_id - 1
+	local id = Entity:children_add(fn, 3000)
+	Entity._inc =  inc_backup
+	return id
+end)
+
 local toggle_ui = ya.sync(function(st)
 	if st.status_sj_id or st.entity_sj_highlights_id then
 		Status:children_remove(st.status_sj_id)
@@ -284,7 +292,7 @@ local toggle_ui = ya.sync(function(st)
 		if cx.active.preview.folder then
 			ya.manager_emit("peek", { force = true })
 		end
-		Entity:children_add(st.highlights_function, 3000)
+		switch_entity_hightlights(st.highlights_function)
 		ya.render()
 		return
 	end
@@ -315,7 +323,8 @@ local toggle_ui = ya.sync(function(st)
 
 		return span
 	end
-	st.entity_sj_highlights_id = Entity:children_add(entity_highlights, 3000)
+
+	st.entity_sj_highlights_id = switch_entity_hightlights(entity_highlights)
 
 	local function status_sj(self)
 		local style = self:style()

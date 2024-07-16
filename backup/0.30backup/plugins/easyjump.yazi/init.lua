@@ -62,6 +62,8 @@ local toggle_ui = ya.sync(function(st)
 		Status:children_remove(st.status_ej_id)
 		st.entity_lable_id = nil
 		st.status_ej_id = nil
+		Entity._inc = Entity._inc - 1
+		Status._inc = Status._inc - 1
 		ya.render()
 		return
 	end

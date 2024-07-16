@@ -1419,7 +1419,6 @@ local function match_mimetype(s)
 end
 
 function M:fetch()
-
 	local mimes = {}
 	local unmatch_ext_urls = {}
 
