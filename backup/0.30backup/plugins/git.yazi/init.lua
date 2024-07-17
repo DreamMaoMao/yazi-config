@@ -140,7 +140,7 @@ local M = {
 				ya.manager_emit("plugin", { "git", args = ya.quote(tostring(cwd))})
 			else
 				local git_is_dirty = st.git_is_dirty  and "*" or ""
-				git_line = (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. git_is_dirty .. ">"):fg("#c6ca4a")} or ui.Line {}				
+				git_line = (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. git_is_dirty .. ">"):fg("#F0BADD")} or ui.Line {}				
 			end
 
 			return git_line
