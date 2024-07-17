@@ -129,11 +129,11 @@ keymap = [
 	{ on = [ "8" ], run = "tab_switch 7", desc = "Switch to the eighth tab" },
 	{ on = [ "9" ], run = "tab_switch 8", desc = "Switch to the ninth tab" },
 
-	{ on = [ "<A-h>" ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
-	{ on = [ "<A-l>" ], run = "tab_switch 1 --relative",  desc = "Switch to the next tab" },
+	{ on = [ "<C-h>" ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+	{ on = [ "<C-l>" ], run = "tab_switch 1 --relative",  desc = "Switch to the next tab" },
 
-	{ on = [ "<C-h>" ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
-	{ on = [ "<C-l>" ], run = "tab_swap 1",  desc = "Swap the current tab with the next tab" },
+	{ on = [ "<A-->" ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
+	{ on = [ "<A-=>" ], run = "tab_swap 1",  desc = "Swap the current tab with the next tab" },
 
 	# Tasks
 	{ on = [ "w" ], run = "tasks_show", desc = "Show the tasks manager" },
