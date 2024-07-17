@@ -64,6 +64,7 @@ local M = {
 		end
 
 		Header:children_add(header_size,1500,Header.LEFT)
+
 	end,
 
 	entry = function(_, args)
