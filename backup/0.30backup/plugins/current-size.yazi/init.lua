@@ -54,7 +54,7 @@ local M = {
 				end
 			end
 
-			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#c6ca4a")  or {}
+			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or {}
 			if st.cwd ~= cwd then
 				st.cwd = cwd
 				clear_state()
