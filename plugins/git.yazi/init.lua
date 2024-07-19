@@ -97,16 +97,12 @@ local clear_state = ya.sync(function(st)
 end)
 
 
-local function update_git_status(files)
-	local filemane = tostring((files[1]).url)
-	local str = filemane:sub(-1,-1) == "/" and filemane:sub(1,-2) or filemane
-	local pattern = "(.+)/[^/]+$"
-	local pwd = string.match(str, pattern)
-	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(pwd))})	
+local function update_git_status(path)
+	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(path))})	
 end
 
 local is_in_git_dir = ya.sync(function(st)
-	return (st.git_branch ~= nil and st.git_branch ~= "") and true or false
+	return (st.git_branch ~= nil and st.git_branch ~= "") and cx.active.current.cwd or nil
 end)
 
 
@@ -182,8 +178,9 @@ local M = {
 }
 
 function M:fetch()
-	if is_in_git_dir() then
-		update_git_status(self.files)	
+	local path = is_in_git_dir()
+	if path then
+		update_git_status(path)	
 	end
 	return 3	
 end

@@ -27,13 +27,15 @@ local set_opts_default = ya.sync(function(state)
 	end
 end)
 
-local function update_current_size(files)
-	local filemane = tostring((files[1]).url)
-	local str = filemane:sub(-1,-1) == "/" and filemane:sub(1,-2) or filemane
-	local pattern = "(.+)/[^/]+$"
-	local pwd = string.match(str, pattern)
-	ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(pwd))})	
-end
+local update_current_size = ya.sync(function(st)
+	local cwd = cx.active.current.cwd
+	for _, value in ipairs(st.opt_folder_size_ignore) do
+		if value == tostring(cwd) then
+			return
+		end
+	end
+	ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})	
+end)
 
 local M = {
 	setup = function(st,opts)
@@ -87,7 +89,7 @@ local M = {
 }
 
 function M:fetch()
-	update_current_size(self.files)	
+	update_current_size()	
 	return 3	
 end
 
