@@ -20,6 +20,14 @@ local clear_state = ya.sync(function(st)
 	ya.render()
 end)
 
+local flush_empty_folder_status = ya.sync(function(st)
+	local cwd = cx.active.current.cwd
+	local folder = cx.active.current
+	if #folder.window == 0 then
+		ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})	
+	end
+end)
+
 
 local set_opts_default = ya.sync(function(state)
 	if (state.opt_folder_size_ignore == nil) then
@@ -67,6 +75,8 @@ local M = {
 
 		Header:children_add(header_size,1500,Header.LEFT)
 
+		ps.sub("delete",flush_empty_folder_status)
+		ps.sub("trash",flush_empty_folder_status)
 	end,
 
 	entry = function(_, args)

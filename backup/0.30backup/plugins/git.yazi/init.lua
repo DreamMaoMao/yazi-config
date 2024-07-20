@@ -41,6 +41,7 @@ local function make_git_table(git_status_str)
 	local filename
 	local multi_path
 	local is_ignore_dir = false
+	local is_untracked_dir = false
 	local convert_name
 	local split_table = string_split(git_status_str:sub(1,-2),"\n")
 	for _, value in ipairs(split_table) do
@@ -62,8 +63,14 @@ local function make_git_table(git_status_str)
 		end
 		if split_value[#split_value]:sub(-2,-1) == "./" and git_status == "I" then
 			is_ignore_dir = true
-			return file_table,is_dirty,is_ignore_dir
+			return file_table,is_dirty,is_ignore_dir,is_untracked_dir
 		end
+
+		if split_value[#split_value]:sub(-2,-1) == "./" and git_status == "U" then
+			is_untracked_dir = true
+			return file_table,is_dirty,is_ignore_dir,is_untracked_dir
+		end
+
 		multi_path = string_split(split_value[#split_value],"/")
 		if (multi_path[#multi_path] == "" and #multi_path == 2) or git_status ~= "I" then
 			filename = multi_path[1]
@@ -75,16 +82,17 @@ local function make_git_table(git_status_str)
 		file_table[convert_name] = git_status
 	end
 
-	return file_table,is_dirty,is_ignore_dir
+	return file_table,is_dirty,is_ignore_dir,is_untracked_dir
 end
 
-local save = ya.sync(function(st, cwd, git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_dir)
+local save = ya.sync(function(st, cwd, git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_dir,is_untracked_dir)
 	if cx.active.current.cwd == Url(cwd) then
 		st.git_branch = git_branch
 		st.git_file_status = git_file_status
 		st.git_is_dirty = git_is_dirty
 		st.git_status_str = git_status_str
 		st.is_ignore_dir = is_ignore_dir
+		st.is_untracked_dir= is_untracked_dir
 		ya.render()
 	end
 end)
@@ -97,18 +105,22 @@ local clear_state = ya.sync(function(st)
 end)
 
 
-local function update_git_status(files)
-	local filemane = tostring((files[1]).url)
-	local str = filemane:sub(-1,-1) == "/" and filemane:sub(1,-2) or filemane
-	local pattern = "(.+)/[^/]+$"
-	local pwd = string.match(str, pattern)
-	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(pwd))})	
+local function update_git_status(path)
+	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(path))})	
 end
 
 local is_in_git_dir = ya.sync(function(st)
-	return (st.git_branch ~= nil and st.git_branch ~= "") and true or false
+	return (st.git_branch ~= nil and st.git_branch ~= "") and cx.active.current.cwd or nil
 end)
 
+local flush_empty_folder_status = ya.sync(function(st)
+	local cwd = cx.active.current.cwd
+	local folder = cx.active.current
+	if #folder.window == 0 then
+		clear_state()
+		ya.manager_emit("plugin", { "git", args = ya.quote(tostring(cwd))})		
+	end
+end)
 
 local M = {
 	setup = function(st,opts)
@@ -116,9 +128,19 @@ local M = {
 		local function linemode_git(self)
 			local f = self._file
 			local git_span = {}
+			local git_status
 			if st.git_branch ~= nil and st.git_branch ~= "" then
 				local name = f.name:gsub("\r", "?", 1)
-				local git_status = st.is_ignore_dir and "I" or (st.git_file_status and st.git_file_status[name] or nil)
+				if st.is_ignore_dir then
+					git_status = "I"
+				elseif st.is_untracked_dir then
+					git_status = "U"
+				elseif st.git_file_status and st.git_file_status[name] then
+					git_status = st.git_file_status[name]
+				else 
+					git_status = nil
+				end
+			
 				local color = set_status_color(git_status)
 				if f:is_hovered() then
 					git_span = (git_status ) and ui.Span(git_status .." ") or ui.Span("✓ ")	
@@ -146,13 +168,17 @@ local M = {
 			return git_line
 		end
 		Header:children_add(header_git,1400,Header.LEFT)
+
+		ps.sub("delete",flush_empty_folder_status)
+		ps.sub("trash",flush_empty_folder_status)
 	end,
 
 	entry = function(_, args)
 		local output
 		local git_is_dirty
+		local is_ignore_dir,is_untracked_dir
 
-		local git_branch  = ""
+		local git_branch
 		local command = "git symbolic-ref HEAD 2> /dev/null" 
 		local file = io.popen(command, "r")
 		output = file:read("*a") 
@@ -162,6 +188,8 @@ local M = {
 			local split_output = string_split(output:sub(1,-2),"/")
 			
 			git_branch = split_output[3]
+		elseif is_in_git_dir() then
+			git_branch = nil
 		else
 			return
 		end
@@ -175,15 +203,16 @@ local M = {
 
 		if output ~= nil and  output ~= "" then
 			git_status_str = output
-			git_file_status,git_is_dirty,is_ignore_dir = make_git_table(git_status_str)
+			git_file_status,git_is_dirty,is_ignore_dir,is_untracked_dir = make_git_table(git_status_str)
 		end
-		save(args[1], git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_dir)
+		save(args[1], git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_dir,is_untracked_dir)
 	end,
 }
 
 function M:fetch()
-	if is_in_git_dir() then
-		update_git_status(self.files)	
+	local path = is_in_git_dir()
+	if path then
+		update_git_status(path)	
 	end
 	return 3	
 end
