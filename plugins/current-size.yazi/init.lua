@@ -20,14 +20,6 @@ local clear_state = ya.sync(function(st)
 	ya.render()
 end)
 
-local flush_empty_folder_status = ya.sync(function(st)
-	local cwd = cx.active.current.cwd
-	local folder = cx.active.current
-	if #folder.window == 0 then
-		ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})	
-	end
-end)
-
 
 local set_opts_default = ya.sync(function(state)
 	if (state.opt_folder_size_ignore == nil) then
@@ -35,15 +27,13 @@ local set_opts_default = ya.sync(function(state)
 	end
 end)
 
-local update_current_size = ya.sync(function(st)
-	local cwd = cx.active.current.cwd
-	for _, value in ipairs(st.opt_folder_size_ignore) do
-		if value == tostring(cwd) then
-			return
-		end
-	end
-	ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})	
-end)
+local function update_current_size(files)
+	local filemane = tostring((files[1]).url)
+	local str = filemane:sub(-1,-1) == "/" and filemane:sub(1,-2) or filemane
+	local pattern = "(.+)/[^/]+$"
+	local pwd = string.match(str, pattern)
+	ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(pwd))})	
+end
 
 local M = {
 	setup = function(st,opts)
@@ -54,7 +44,7 @@ local M = {
 			st.opt_folder_size_ignore  = opts.folder_size_ignore
 		end
 		
-		local function header_size(self)
+		function Header:size()
 			local cwd = cx.active.current.cwd
 			local ignore_caculate_size = false
 
@@ -64,19 +54,25 @@ local M = {
 				end
 			end
 
-			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or {}
+			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]")  or {}
 			if st.cwd ~= cwd then
 				st.cwd = cwd
 				clear_state()
-				ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd)).." "..tostring(ignore_caculate_size)})			
+				ya.manager_emit("plugin", { st._name, args = ya.quote(tostring(cwd)).." "..tostring(ignore_caculate_size)})			
 			end
 			return folder_size_span
 		end
 
-		Header:children_add(header_size,1500,Header.LEFT)
-
-		ps.sub("delete",flush_empty_folder_status)
-		ps.sub("trash",flush_empty_folder_status)
+		function Header:render(area)
+			self.area = area
+		
+			local right = ui.Line { self:count(), self:tabs() }
+			local left = ui.Line { self:cwd(math.max(0, area.w - right:width() - ui.Line{self:size()}:width())), self:size()}
+			return {
+				ui.Paragraph(area, { left }),
+				ui.Paragraph(area, { right }):align(ui.Paragraph.RIGHT),
+			}
+		end
 	end,
 
 	entry = function(_, args)
@@ -99,7 +95,7 @@ local M = {
 }
 
 function M:fetch()
-	update_current_size()	
+	update_current_size(self.files)	
 	return 3	
 end
 

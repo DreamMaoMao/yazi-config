@@ -27,7 +27,7 @@ tab_width    = 1
 # Count
 count_copied   = { fg = "#000000", bg = "#8bca4b" }
 count_cut      = { fg = "#000000", bg = "#ea6962" }
-count_selected = { fg = "#000000", bg = "#e6a0b3" }
+count_selected = { fg = "#000000", bg = "#cfc251" }
 
 # Border
 border_symbol = "│"

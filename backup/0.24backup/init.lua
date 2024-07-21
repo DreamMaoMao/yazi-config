@@ -28,7 +28,6 @@ require("custom"):setup({
 })
 
 require("git-status"):setup({
-    style = "linemode" -- beside or linemode
 })
 
 require("current-size"):setup({

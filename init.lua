@@ -1,3 +1,7 @@
+-- require("keyjump"):setup({
+-- 	icon_fg = "#fda1a1",
+-- })
+
 require("easyjump"):setup({
 	icon_fg = "#fda1a1",
     first_key_fg = "#df6249"
@@ -18,18 +22,19 @@ require("searchjump"):setup({
 	search_patterns = ({"%d+.1080p","第%d+集","%.E%d+","S%d+E%d+",})
 })
 
-require("status-owner"):setup({
+require("custom"):setup({
+	border_color = "#9a8774",
 	user_color = "#D4BB91"
 })
 
-require("git"):setup()
+require("git-status"):setup({
+})
 
 require("current-size"):setup({
     folder_size_ignore = ({"/home/wrq","/","/home"}),
 })
 
-require("full-border"):setup()
+-- require("zoxide"):setup({
+-- 	update_db = true,
+-- })
 
--- require("session"):setup {
--- 	sync_yanked = true,
--- }
