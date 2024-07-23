@@ -174,7 +174,7 @@ local M = {
 				ya.manager_emit("plugin", { st._name, args = ya.quote(tostring(cwd))})
 			else
 				local git_is_dirty = st.git_is_dirty  and "*" or ""
-				git_line = (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. git_is_dirty .. ">"):fg("#c6ca4a")} or ui.Line {}				
+				git_line = (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. git_is_dirty .. ">"):fg("#f6a6da")} or ui.Line {}				
 			end
 
 			local s = ya.readable_path(tostring(cx.active.current.cwd))
@@ -200,6 +200,7 @@ local M = {
 			return
 		end
 		
+		local is_ignore_dir,is_untracked_dir
 		local git_status_str = ""
 		local git_file_status = nil
 		local command = "git status --ignored -s --ignore-submodules=dirty 2> /dev/null" 
@@ -211,15 +212,16 @@ local M = {
 			git_status_str = output
 			git_file_status,git_is_dirty,is_ignore_dir,is_untracked_dir = make_git_table(git_status_str)
 		end
-		save(args[1], git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_diris_untracked_dir)
+		save(args[1], git_branch,git_file_status,git_is_dirty,git_status_str,is_ignore_dir,is_untracked_dir)
 	end,
 }
 
-function M:fetch()
+function M:preload()
 	if is_in_git_dir() then
 		update_git_status(self.files)	
 	end
 	return 3	
 end
+
 
 return M

@@ -109,3 +109,9 @@ enabled = false
 prepend_previewers = [
   { name = "*.md", run = "glow" },
 ]
+
+prepend_preloaders = [
+  { name = "*", cond = "!mime", run = "git-status", multi = true, prio = "normal" },
+  { name = "*", cond = "!mime", run = "current-size", multi = true, prio = "normal" },
+
+]

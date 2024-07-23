@@ -82,7 +82,6 @@ keymap = [
 
 	# Filter & file
 	{ on = [ "f","t" ], 	run = "filter --smart", 			 desc = "Filter the files" },
-	# { on = [ "f","d" ],     run = "search fd",              desc = "Search files by name using fd" },
 	{ on = [ "f","g" ],     run = "plugin fg --args='rg'",  desc = "find file by content (ripgrep match)" },
 	{ on = [ "f","G" ],     run = "plugin fg",              desc = "find file by content (fuzzy match)" },
 	{ on = [ "f","e" ],     run = "search none",            desc = "Cancel the ongoing search" },

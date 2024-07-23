@@ -3,7 +3,7 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#cfc251" }
+cwd = { fg = "#eec173" }
 
 # Hovered
 hovered         = { fg = "#000000", bg = "#ac9259" }
