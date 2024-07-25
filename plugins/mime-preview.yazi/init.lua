@@ -1,6 +1,7 @@
 local M = {}
 
 local ext_mime_map = {
+	["AppImage"] = "application/x-executable",
 	["dsf"] = "audio/x-dsf",
 	["a2l"] = "application/A2L",
 	["aml"] = "application/AML",
@@ -918,7 +919,6 @@ local ext_mime_map = {
 	["726"] = "audio/32kadpcm",
 	["adts"] = "audio/aac",
 	["aac"] = "audio/aac",
-	["ass"] = "audio/aac",
 	["ac3"] = "audio/ac3",
 	["amr"] = "audio/AMR",
 	["awb"] = "audio/AMR-WB",
@@ -1147,6 +1147,7 @@ local ext_mime_map = {
 	["md"] = "text/markdown",
 	["miz"] = "text/mizar",
 	["n3"] = "text/n3",
+	["ass"] = "text/plain",
 	["txt"] = "text/plain",
 	["asc"] = "text/plain",
 	["text"] = "text/plain",
@@ -1303,6 +1304,7 @@ local ext_mime_map = {
 	["stw"] = "application/vnd.sun.xml.writer.template",
 	["sis"] = "application/vnd.symbian.install",
 	["mms"] = "application/vnd.wap.mms-message",
+	["7z"] = "application/x-7z-compressed",
 	["anx"] = "application/x-annodex",
 	["bcpio"] = "application/x-bcpio",
 	["torrent"] = "application/x-bittorrent",
@@ -1332,7 +1334,7 @@ local ext_mime_map = {
 	["sv4crc"] = "application/x-sv4crc",
 	["tar"] = "application/x-tar",
 	["tcl"] = "application/x-tcl",
-	["tex"] = "application/x-tex",
+	["tex"] = "text/x-tex",
 	["texinfo"] = "application/x-texinfo",
 	["texi"] = "application/x-texinfo",
 	["man"] = "application/x-troff-man",
@@ -1417,13 +1419,24 @@ local function match_mimetype(s)
 	end
 end
 
-function M:preload()		
+local flush = ya.sync(function (state,mimes)
+	ya.manager_emit("update_mimetype", { updates = mimes })
+	ya.manager_emit("peek", { force = true })
+end)
+
+local get_data = ya.sync(function (state)
 	local mimes = {}
 	local unmatch_ext_urls = {}
-  
-	for _, file in ipairs(self.files) do
+
+	local folder = cx.active.preview.folder
+	if not folder then
+		return mimes
+	end
+	for _, file in ipairs(folder.window) do
+	  if file.cha.is_dir then
+		goto continue
+	  end
 	  local url = tostring(file.url)
-  
 	  local ext = tostring(file.name):match("^.+%.(.+)$")
 	  if ext then
 		ext = ext:lower()
@@ -1436,40 +1449,39 @@ function M:preload()
 	  unmatch_ext_urls[#unmatch_ext_urls + 1] = url
 	  ::continue::
 	end
+
+	return mimes
+
+end)
+
+
+
+local M = {
+	setup = function(st,opts)
+		local function Status_mime(self)
+			local url = cx.active.current.hovered and tostring(cx.active.current.hovered.url) or ""
+			if cx.active.preview.folder and #cx.active.preview.folder.window > 0 and st.task and st.task == url then
+				ya.manager_emit("plugin", { "mime-preview", args = ya.quote(tostring(""))})	
+				st.task =  nil
+			end
+			if st.url ~= url then
+				st.url = url
+				st.task = url
+			end
+			return {}
+		end
 	
-
-	if #unmatch_ext_urls then
-	  local command = Command("file"):arg("--mime-type"):stdout(Command.PIPED):stderr(Command.PIPED)
-	  if ya.target_family() == "windows" then
-		command:arg("-b")
-	  else
-		command:arg("-bL")
-	  end
-  
-	  local i = 1
-	  local mime
-	  local output = command:args(unmatch_ext_urls):output()
-	  for line in output.stdout:gmatch("[^\r\n]+") do
-		if i > #unmatch_ext_urls then
-		  break
-		end
-
-		mime = match_mimetype(line)
-
-		if mime and string.find(line, mime, 1, true) ~= 1 then
-			goto continue
-		elseif mime then		
-			mimes[unmatch_ext_urls[i]] = mime
-		i = i + 1
-		end
-		::continue::
-	  end
+		Status:children_add(Status_mime,100000,Status.LEFT)
+	
 	end
-  
+}
+
+function M:entry()
+	local mimes =  get_data()
+
 	if #mimes then
-	  ya.manager_emit("update_mimetype", {}, mimes)
-	  return 3
+		flush(mimes)
 	end
-	return 2
-  end
+end
+
 return M

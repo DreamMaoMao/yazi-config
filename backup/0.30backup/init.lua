@@ -19,8 +19,13 @@ require("searchjump"):setup({
 })
 
 require("status-owner"):setup({
-	user_color = "#D4BB91"
+	color = "#D4BB91"
 })
+
+require("header-hidden"):setup({
+    color = "#88c2f4"
+})
+
 
 require("git"):setup()
 
@@ -29,6 +34,8 @@ require("current-size"):setup({
 })
 
 require("full-border"):setup()
+
+require("mime-preview"):setup()
 
 -- require("session"):setup {
 -- 	sync_yanked = true,

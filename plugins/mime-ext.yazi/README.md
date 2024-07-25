@@ -1,4 +1,4 @@
-# mime.yazi
+# mime-ext.yazi
 
 A [Yazi](https://github.com/sxyazi/yazi) plugin that quickly get mimetype to improved theme rendering speed
 
@@ -10,8 +10,8 @@ A [Yazi](https://github.com/sxyazi/yazi) plugin that quickly get mimetype to imp
 
 ```sh
 # Linux/macOS
-git clone https://github.com/DreamMaoMao/mime.yazi.git ~/.config/yazi/plugins/mime.yazi
+git clone https://github.com/DreamMaoMao/mime-ext.yazi.git ~/.config/yazi/plugins/mime-ext.yazi
 
 # Windows
-git clone https://github.com/DreamMaoMao/mime.yazi.git %AppData%\yazi\config\plugins\mime.yazi
+git clone https://github.com/DreamMaoMao/mime-ext.yazi.git %AppData%\yazi\config\plugins\mime-ext.yazi
 ```

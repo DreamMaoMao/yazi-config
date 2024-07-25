@@ -110,8 +110,9 @@ prepend_previewers = [
   { name = "*.md", run = "glow" },
 ]
 
-prepend_preloaders = [
-  { name = "*", cond = "!mime", run = "git-status", multi = true, prio = "normal" },
-  { name = "*", cond = "!mime", run = "current-size", multi = true, prio = "normal" },
-
+fetchers = [
+	# Mimetype
+	{ id = "mime-ext", name = "*", run = "mime-ext",if = "!mime", prio = "high" },
+	{ id = "git", name = "*", run = "git", prio = "normal" },
+	{ id = "current-size", name = "*", run = "current-size", prio = "normal" },
 ]

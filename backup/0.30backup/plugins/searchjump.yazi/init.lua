@@ -389,8 +389,11 @@ local set_target_str = ya.sync(function(state, patterns, final_input_str,re_matc
 
 	-- apply match data to render
 	ya.render()
-
-	return ((not exist_match) and state.opt_auto_exit_when_unmatch) and true or false
+	if not exist_match and (re_match == true or patterns[1] ~= "" ) and state.opt_auto_exit_when_unmatch then
+		return true
+	else
+		return false
+	end	
 end)
 
 local clear_state_str = ya.sync(function(state)

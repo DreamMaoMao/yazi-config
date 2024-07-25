@@ -27,12 +27,12 @@ require("custom"):setup({
 	user_color = "#D4BB91"
 })
 
-require("git-status"):setup({
-})
+-- require("git-status"):setup({
+-- })
 
-require("current-size"):setup({
-    folder_size_ignore = ({"/home/wrq","/","/home"}),
-})
+-- require("current-size"):setup({
+--     folder_size_ignore = ({"/home/wrq","/","/home"}),
+-- })
 
 -- require("zoxide"):setup({
 -- 	update_db = true,
