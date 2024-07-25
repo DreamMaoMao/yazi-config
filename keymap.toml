@@ -2,6 +2,8 @@
 
 keymap = [
 
+	{ on = [ "U" ], run = "plugin cd-last", desc = "cd last path" },
+
 	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Save current position as a bookmark" },
 	{ on = [ "u","g" ], run = "plugin bookmarks --args='jump'", desc = "Jump to a bookmark" },
 	{ on = [ "u","d" ], run = "plugin bookmarks --args='delete'", desc = "Delete a bookmark" },

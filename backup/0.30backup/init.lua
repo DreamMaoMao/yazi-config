@@ -26,6 +26,7 @@ require("header-hidden"):setup({
     color = "#88c2f4"
 })
 
+require("cd-last"):setup()
 
 require("git"):setup()
 

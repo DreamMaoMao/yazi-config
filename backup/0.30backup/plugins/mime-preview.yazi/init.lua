@@ -1,5 +1,3 @@
-local M = {}
-
 local ext_mime_map = {
 	["AppImage"] = "application/x-executable",
 	["dsf"] = "audio/x-dsf",
