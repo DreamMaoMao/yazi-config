@@ -58,12 +58,13 @@ progress_normal = { fg = "#A89984", bg = "#000000" }
 progress_error  = { fg = "#ea6962", bg = "#000000" }
 
 # Permissions
-permissions_t = { fg = "#8bca4b" }
-permissions_r = { fg = "#ea6962" }
-permissions_w = { fg = "#cfc251" }
-permissions_x = { fg = "#7daea3" }
-permissions_s = { fg = "#619b63" }
+permissions_t = { fg = "#8bca4b", bold = true }
+permissions_r = { fg = "#ea6962", bold = true }
+permissions_w = { fg = "#eec173", bold = true }
+permissions_x = { fg = "#8bca4b", bold = true }
+permissions_s = { fg = "#A89984", bold = true }
 
+path = { fg = "#8bca4b", bold = true }
 # Owner
 
 # : }}}

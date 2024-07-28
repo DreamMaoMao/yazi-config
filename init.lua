@@ -19,12 +19,21 @@ require("searchjump"):setup({
 })
 
 require("status-owner"):setup({
-	color = "#D4BB91"
+	color = "#d98a8a"
+})
+
+require("status-mtime"):setup({
+	color = "#ba884a"
 })
 
 require("header-hidden"):setup({
     color = "#88c2f4"
 })
+
+require("header-host"):setup({
+    color = "#8bca4b"
+})
+
 
 require("cd-last"):setup()
 

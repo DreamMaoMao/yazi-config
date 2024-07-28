@@ -104,7 +104,6 @@ local clear_state = ya.sync(function(st)
 	ya.render()
 end)
 
-
 local function update_git_status(path)
 	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(path))})	
 end

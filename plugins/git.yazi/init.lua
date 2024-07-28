@@ -104,7 +104,6 @@ local clear_state = ya.sync(function(st)
 	ya.render()
 end)
 
-
 local function update_git_status(path)
 	ya.manager_emit("plugin", { "git", args = ya.quote(tostring(path))})	
 end
@@ -145,7 +144,7 @@ local M = {
 				if f:is_hovered() then
 					git_span = (git_status ) and ui.Span(git_status .." ") or ui.Span("✓ ")	
 				else
-					git_span = (git_status) and ui.Span(git_status .." "):fg(color) or ui.Span("✓ "):fg(color)		
+					git_span = (git_status) and ui.Span(git_status .." "):fg(color) or ui.Span("✓ "):fg(color)	
 				end
 			end
 			return git_span
