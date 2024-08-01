@@ -28,6 +28,25 @@ local flush_empty_folder_status = ya.sync(function(st)
 	end
 end)
 
+local handle_path_change = ya.sync(function(st)
+	local cwd = cx.active.current.cwd
+	local ignore_caculate_size = false
+	for _, value in ipairs(st.opt_folder_size_ignore) do
+		if value == tostring(cwd) then
+			ignore_caculate_size = true
+		elseif value.."/" == tostring(cwd) then
+			ignore_caculate_size = true
+		end
+	end
+	if st.cwd ~= cwd then
+		st.cwd = cwd
+		clear_state()
+		if not ignore_caculate_size then
+			ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})			
+		end
+	end
+end)
+
 
 local set_opts_default = ya.sync(function(state)
 	if (state.opt_folder_size_ignore == nil) then
@@ -37,8 +56,12 @@ end)
 
 local update_current_size = ya.sync(function(st)
 	local cwd = cx.active.current.cwd
+
+
 	for _, value in ipairs(st.opt_folder_size_ignore) do
 		if value == tostring(cwd) then
+			return
+		elseif value.."/" == tostring(cwd) then
 			return
 		end
 	end
@@ -55,26 +78,13 @@ local M = {
 		end
 		
 		local function header_size(self)
-			local cwd = cx.active.current.cwd
-			local ignore_caculate_size = false
-
-			for _, value in ipairs(st.opt_folder_size_ignore) do
-				if value == tostring(cwd) then
-					ignore_caculate_size = true
-				end
-			end
-
 			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or {}
-			if st.cwd ~= cwd then
-				st.cwd = cwd
-				clear_state()
-				ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd)).." "..tostring(ignore_caculate_size)})			
-			end
 			return folder_size_span
 		end
 
 		Header:children_add(header_size,1500,Header.LEFT)
 
+		ps.sub("cd",handle_path_change)
 		ps.sub("delete",flush_empty_folder_status)
 		ps.sub("trash",flush_empty_folder_status)
 	end,
@@ -84,11 +94,8 @@ local M = {
 
 
 		local folder_size = ""
-		if args[2] ~= "true" then
-			output = Command("du"):args({"-sh",args[1].."/"}):output()
-		else
-			output = nil
-		end
+		output = Command("du"):args({"-sh",args[1].."/"}):output()
+
 		if output then
 			local split_output = string_split(output.stdout,"\t")
 			folder_size = split_output[1]

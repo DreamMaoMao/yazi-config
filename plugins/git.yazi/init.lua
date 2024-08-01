@@ -57,6 +57,7 @@ local function make_git_table(git_status_str)
 			git_status = "I"
 		elseif split_value[#split_value - 1] == "->" then
 			git_status = "R"
+			is_dirty = true
 		else
 			git_status = split_value[#split_value - 1]
 			is_dirty = true
@@ -89,7 +90,7 @@ local save = ya.sync(function(st, cwd, git_branch,git_file_status,git_is_dirty,g
 	if cx.active.current.cwd == Url(cwd) then
 		st.git_branch = git_branch
 		st.git_file_status = git_file_status
-		st.git_is_dirty = git_is_dirty
+		st.git_is_dirty = git_is_dirty and "*" or ""
 		st.git_status_str = git_status_str
 		st.is_ignore_dir = is_ignore_dir
 		st.is_untracked_dir= is_untracked_dir
@@ -120,6 +121,16 @@ local flush_empty_folder_status = ya.sync(function(st)
 		ya.manager_emit("plugin", { "git", args = ya.quote(tostring(cwd))})		
 	end
 end)
+
+local handle_path_change = ya.sync(function(st)
+	local cwd = cx.active.current.cwd
+	if st.cwd ~= cwd then
+		st.cwd = cwd
+		clear_state()
+		ya.manager_emit("plugin", { "git", args = ya.quote(tostring(cwd))})		
+	end
+end)
+
 
 local M = {
 	setup = function(st,opts)
@@ -152,22 +163,11 @@ local M = {
 		Linemode:children_add(linemode_git,8000)
 
 		local function header_git(self)
-			local git_line = ui.Line {}
-			local cwd = cx.active.current.cwd
-
-			if st.cwd ~= cwd then
-				st.cwd = cwd
-				clear_state()
-				ya.manager_emit("plugin", { "git", args = ya.quote(tostring(cwd))})
-			else
-				local git_is_dirty = st.git_is_dirty  and "*" or ""
-				git_line = (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. git_is_dirty .. ">"):fg("#f6a6da")} or ui.Line {}				
-			end
-
-			return git_line
+			return (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. st.git_is_dirty .. ">"):fg("#f6a6da")} or ui.Line {}				
 		end
 		Header:children_add(header_git,1400,Header.LEFT)
 
+		ps.sub("cd",handle_path_change)
 		ps.sub("delete",flush_empty_folder_status)
 		ps.sub("trash",flush_empty_folder_status)
 	end,
@@ -213,7 +213,7 @@ function M:fetch()
 	if path then
 		update_git_status(path)	
 	end
-	return 3	
+	return 3
 end
 
 return M

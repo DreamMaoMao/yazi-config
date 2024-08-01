@@ -34,6 +34,7 @@ archive = [
 	# { run = 'unzip "$1"', orphan = true, desc = "unzip" , for = "linux" },
 	# { run = 'unar "$1"', orphan = true, desc = "unrar" , for = "linux" },
 	{ run = 'ouch decompress "$1" ', orphan = true, desc = "decompress" , for = "linux" },
+	# { run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
 ]
 
 text = [
@@ -108,13 +109,19 @@ enabled = false
 [plugin]
 prepend_previewers = [
   { name = "*.md", run = "glow" },
+  { name = "*.epub", run = "epub" },
 ]
+
+prepend_preloaders= [
+  { name = "*.epub", run = "epub" },
+]
+
 
 fetchers = [
 	# Mimetype
-	{ id = "mime-ext", name = "*", run = "mime-ext",if = "!mime", prio = "high" },
-	{ id = "git", name = "*", run = "git",if = "!mime", prio = "normal" },
-	{ id = "git", name = "*/", run = "git",if = "mime", prio = "normal" },
-	{ id = "current-size", name = "*/", run = "current-size",if = "mime", prio = "normal" },
-	{ id = "current-size", name = "*", run = "current-size", if = "!mime" ,prio = "normal" },
+	{ id = "mime-ext", name = "*", run = "mime-ext", prio = "high" },
+	{ id = "git", name = "*", run = "git", prio = "normal" },
+	{ id = "git", name = "*/", run = "git", prio = "normal" },
+	{ id = "current-size", name = "*/", run = "current-size", prio = "normal" },
+	{ id = "current-size", name = "*", run = "current-size",prio = "normal" },
 ]
