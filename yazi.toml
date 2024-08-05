@@ -33,8 +33,8 @@ archive = [
 	# { run = 'basename "$@" | xargs tar xzf ', orphan = true, desc = "tar xzf" , for = "linux" },
 	# { run = 'unzip "$1"', orphan = true, desc = "unzip" , for = "linux" },
 	# { run = 'unar "$1"', orphan = true, desc = "unrar" , for = "linux" },
-	{ run = 'ouch decompress "$1" ', orphan = true, desc = "decompress" , for = "linux" },
-	# { run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+	# { run = 'ouch decompress "$1" ', orphan = true, desc = "decompress" , for = "linux" },
+	{ run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
 ]
 
 text = [
@@ -46,7 +46,7 @@ text = [
 	# { run = '''konsole -e "nvim  "$@"" ''',orphan = true, desc = "neovim" , for = "linux" },
 ]
 image = [
-	{ run = 'eog "$@"',  orphan = true, desc = "eog" , for = "linux"},
+	{ run = 'eog  "$@"',  orphan = true, desc = "eog" , for = "linux"},
 	{ run = 'feh "$@"',  orphan = true, desc = "feh" , for = "linux"},
 ]
 video = [
