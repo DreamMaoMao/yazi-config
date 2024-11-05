@@ -315,7 +315,6 @@ local toggle_ui = ya.sync(function(st)
 		}
 	end
 	st.status_sj_id = Status:children_add(status_sj,1001,Status.LEFT)
-	
 
 	if cx.active.preview.folder then
 		ya.manager_emit("peek", { force = true })
@@ -542,10 +541,11 @@ return {
 			end
 
 			-- If the string after the entered character does not match anything, -- then the string input is cancelled and keep the previous input matches status
-			if not is_match then
+			if not is_match and re_match then
+				break
+			elseif not is_match then
 				input_str,final_input_str = backout_last_input(input_str)
 				patterns = {input_str}
-				re_match = false		
 				goto reset
 			end
 			::continue::
