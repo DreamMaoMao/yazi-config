@@ -14,12 +14,13 @@ tab_size        = 2
 max_width       = 600
 max_height      = 900
 cache_dir       = ""
+image_delay     = 30
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 folder = [
-	{ run = '$EDITOR "$1"', block = true,desc = "neovim", for = "linux" },
+	{ run = 'nvim "$1"', block = true,desc = "neovim", for = "linux" },
 	{ run = '''fish -c "lazygit -p "$1""''', block = true,desc = "lazygit", for = "linux" },
 	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
 	{ run = 'konsole --workdir "$@"',orphan = true, desc = "konsole" , for = "linux" },
@@ -33,12 +34,11 @@ archive = [
 	# { run = 'basename "$@" | xargs tar xzf ', orphan = true, desc = "tar xzf" , for = "linux" },
 	# { run = 'unzip "$1"', orphan = true, desc = "unzip" , for = "linux" },
 	# { run = 'unar "$1"', orphan = true, desc = "unrar" , for = "linux" },
-	# { run = 'ouch decompress "$1" ', orphan = true, desc = "decompress" , for = "linux" },
-	{ run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+	{ run = 'ouch decompress "$1" ', orphan = true, desc = "ouch decompress" , for = "linux" },
 ]
 
 text = [
-	{ run = '$EDITOR "$1"', block = true,desc = "neovim", for = "linux" },
+	{ run = 'nvim "$1"', block = true,desc = "neovim", for = "linux" },
 	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
 	{ run = 'gedit "$@" ', block = true, orphan = true, desc = "gedit"  , for = "linux"},
 	# { run = 'nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },

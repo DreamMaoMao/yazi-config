@@ -124,8 +124,35 @@ local delete_bookmark = ya.sync(function(state,idx)
 		timeout = 2,
 		level = "info",
 	}
-	delete_lines_by_content(SERIALIZE_PATH,string.format("%s###",state.bookmarks[idx].on))
 	table.remove(state.bookmarks, idx) 
+  save_to_file(SERIALIZE_PATH)
+end)
+
+local modify_bookmark = ya.sync(function(state,key) 
+
+	local under_cursor_file = cx.active.current.hovered
+
+	for i, f in ipairs(state.bookmarks) do
+		if f.on == key then
+			f.file_url = tostring(under_cursor_file.url)
+			f.isdir = tostring(under_cursor_file.cha.is_dir)
+			ya.notify {
+				title = "Bookmark",
+				content = "change key <" .. key .."> bind to current",
+				timeout = 2,
+				level = "info",
+			}
+      save_to_file(SERIALIZE_PATH)
+			return
+		end
+	end
+	ya.notify {
+		title = "Bookmark",
+		content = "key not exists",
+		timeout = 2,
+		level = "info",
+	}
+
 end)
 
 local delete_all_bookmarks = ya.sync(function(state)
@@ -236,6 +263,18 @@ return {
 					return
 				end
 				save_bookmark(value,key)
+			end
+			return
+		end
+
+		if action == "modify" then
+			local value, event = ya.input({
+				realtime = false,
+				title = "input change key:",
+				position = { "top-center", y = 3, w = 40 },
+			})
+			if event == 1 then
+				modify_bookmark(value)
 			end
 			return
 		end

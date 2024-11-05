@@ -338,6 +338,9 @@ files = [
 	{ name = "xmonad.hs", text = "", fg_dark = "#fd4d5d", fg_light = "#a9333e" },
 	{ name = "xorg.conf", text = "", fg_dark = "#e54d18", fg_light = "#ac3a12" },
 	{ name = "xsettingsd.conf", text = "", fg_dark = "#e54d18", fg_light = "#ac3a12" },
+	{ name = "LICENSE.sway", text = " ", fg_dark = "#5F8700", fg_light = "#5F8700" },
+	{ name = "LICENSE.dwm", text = " ", fg_dark = "#0087AF", fg_light = "#0087AF" },
+
 ]
 exts = [
 	{ name = "3gp", text = "", fg_dark = "#fd971f", fg_light = "#7e4c10" },

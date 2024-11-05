@@ -2,13 +2,18 @@
 
 keymap = [
 
+	{ on = [ "<C-A-k>" ],    run = "plugin --sync arrow-parent --args=-1", desc = "arrow parent up" },
+	{ on = [ "<C-A-j>" ],  run = "plugin --sync arrow-parent --args=1",  desc = "arrow parent down" },
 	{ on = [ "U" ], run = "plugin cd-last", desc = "cd last path" },
 
 	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Save current position as a bookmark" },
+	{ on = [ "u","m" ], run = "plugin bookmarks --args='modify'", desc = "modify key bind to current position" },
 	{ on = [ "u","g" ], run = "plugin bookmarks --args='jump'", desc = "Jump to a bookmark" },
 	{ on = [ "u","d" ], run = "plugin bookmarks --args='delete'", desc = "Delete a bookmark" },
 	{ on = [ "u","D" ],	run = "plugin bookmarks --args='delete_all'", desc = "Delete all bookmarks" },
+	{ on = [ "u","l"], run = "plugin lastopen --args='jump'",         desc = "jump to last open file" },
 
+	{ on = [ "I" ], run = "plugin keyjump --args='select'", desc = "easyjump" },
 	{ on = [ "i" ], run = "plugin easyjump --args=''", desc = "easyjump" },
 	{ on = [ "s" ], run = "plugin searchjump --args=''", desc = "searchjump" },
 
@@ -20,6 +25,7 @@ keymap = [
 	{ on = [ "z", "n" ], run = "linemode none",        desc = "Set linemode to none" },
 	{ on = [ "z", "o" ], run = "linemode owner",       desc = "Set linemode to owner" },
 
+	{ on = [ "u","i" ],     run = "plugin cmd --args='lazygit'",              desc = "lazygit" },
 	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/master/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon x11" },
 	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/master/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon wayland" },
 	# { on = [ "u","w" ], run = '''shell ' GDK_BACKEND=wayland dragon -x -i -T "$1"' --confirm''',desc="dragon wayland" },
@@ -27,8 +33,8 @@ keymap = [
 
 	{ on = [ "<Esc>" ], run = "escape", desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = [ "q" ],     run = "quit",   desc = "Exit the process" },
-	{ on = [ "<C-q>" ], run = "close",  desc = "Close the current tab, or quit if it is last tab" },
-	{ on = "<C-z>", run = "suspend",            desc = "Suspend the process" },
+	{ on = [ "<A-q>" ], run = "close",  desc = "Close the current tab, or quit if it is last tab" },
+	{ on = ["<A-z>"], run = "suspend",            desc = "Suspend the process" },
 
 	# Navigation
 	{ on = [ "k" ], run = "arrow -1", desc = "Move cursor up" },
@@ -71,6 +77,7 @@ keymap = [
 	{ on = [ "o" ],         run = "open --interactive --hovered",     desc = "Open the currsor hovered files interactively" },
 	# { on = [ "O" ],   		run = "open",                   desc = "Open the selected files" },
 	{ on = [ "<Enter>" ],   run = "open --hovered",         desc = "Open the currsor hovered files" },
+	{ on = [ "<S-Enter>" ],   run = "plugin lastopen --args='open'",         desc = "Open the currsor hovered files" },
 	{ on = [ "y" ],         run = "yank",                   desc = "Copy the selected files" },
 	{ on = [ "x" ],         run = "yank --cut",             desc = "Cut the selected files" },
 	{ on = [ "p" ],         run = "paste",                  desc = "Paste the files" },
@@ -92,7 +99,7 @@ keymap = [
 	{ on = [ "f","G" ],     run = "plugin fg",              desc = "find file by content (fuzzy match)" },
 	{ on = [ "f","e" ],     run = "search none",            desc = "Cancel the ongoing search" },
 	{ on = [ "f","z" ],     run = "plugin zoxide",            desc = "Jump to a directory using zoxide" },
-	{ on = [ "f","f" ],     run = "plugin fg --args='fzf'",           	 desc = "Jump to a directory, or reveal a file using fzf" },
+	{ on = [ "f","f" ],     run = "plugin fg --args='fzf'",   desc = "Jump to a directory, or reveal a file using fzf" },
 	{ on = [ "f","n" ], 	run = "find --smart",            		 desc = "Find next file" },
 	{ on = [ "f","p" ], 	run = "find --previous --smart", 		 desc = "Find previous file" },
 	{ on = [ "n" ], 		run = "find_arrow",              		 desc = "Go to next found file" },
@@ -132,11 +139,11 @@ keymap = [
 	{ on = [ "8" ], run = "tab_switch 7", desc = "Switch to the eighth tab" },
 	{ on = [ "9" ], run = "tab_switch 8", desc = "Switch to the ninth tab" },
 
-	{ on = [ "<C-h>" ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
-	{ on = [ "<C-l>" ], run = "tab_switch 1 --relative",  desc = "Switch to the next tab" },
+	{ on = [ "<A-h>" ], run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+	{ on = [ "<A-l>" ], run = "tab_switch 1 --relative",  desc = "Switch to the next tab" },
 
-	{ on = [ "<A-->" ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
-	{ on = [ "<A-=>" ], run = "tab_swap 1",  desc = "Swap the current tab with the next tab" },
+	# { on = [ "<A-->" ], run = "tab_swap -1", desc = "Swap the current tab with the previous tab" },
+	# { on = [ "<A-=>" ], run = "tab_swap 1",  desc = "Swap the current tab with the next tab" },
 
 	# Tasks
 	{ on = [ "w" ], run = "tasks_show", desc = "Show the tasks manager" },
@@ -194,6 +201,7 @@ keymap = [
 
 	{ on = [ "<Up>" ],   run = "arrow -1", desc = "Move cursor up" },
 	{ on = [ "<Down>" ], run = "arrow 1",  desc = "Move cursor down" },
+
 
 	{ on = [ "?" ], run = "help", desc = "Open help" }
 ]
@@ -270,20 +278,47 @@ keymap = [
 	{ on = [ "/" ], run = "filter", desc = "Apply a filter for the help items" },
 ]
 
+[confirm]
+keymap = [
+	{ on = "<Esc>",   run = "close",          desc = "Cancel the confirm" },
+	{ on = "<C-[>",   run = "close",          desc = "Cancel the confirm" },
+	{ on = "<C-c>",   run = "close",          desc = "Cancel the confirm" },
+	{ on = "<Enter>", run = "close --submit", desc = "Submit the confirm" },
+
+	{ on = "n", run = "close",          desc = "Cancel the confirm" },
+	{ on = "y", run = "close --submit", desc = "Submit the confirm" },
+
+	{ on = "k", run = "arrow -1", desc = "Move cursor up" },
+	{ on = "j", run = "arrow 1",  desc = "Move cursor down" },
+
+	{ on = "K", run = "arrow -5", desc = "Move cursor up" },
+	{ on = "J", run = "arrow 5",  desc = "Move cursor down" },
+
+	{ on = "<Up>",   run = "arrow -1", desc = "Move cursor up" },
+	{ on = "<Down>", run = "arrow 1",  desc = "Move cursor down" },
+
+]
+
 
 [[manager.prepend_keymap]]
 on  = [ "c","l" ]
-run = ['''
-	shell --confirm 'for path in "$@"; do echo -en "file://${path}\n"; done | wl-copy -t text/uri-list; wl-paste | xclip -i -selection clipboard -rmlastnl -t text/uri-list'
-''' ]
-desc = "clip to wayland clipboard"
+run = [ "plugin clipboard" ]
+desc = "clip to clipboard"
 
-[[manager.prepend_keymap]]
-on  = [ "c","o" ]
-run = ['''
-	shell --confirm 'for path in "$@"; do  echo -en "file://${path}\n"; done |  xclip -i -selection clipboard -rmlastnl -t text/uri-list'
-''' ]
-desc = "clip to x11 clipboard"
+
+# [[manager.prepend_keymap]]
+# on  = [ "c","l" ]
+# run = ['''
+# 	shell --confirm 'for path in "$@"; do echo -en "file://${path}\n"; done | wl-copy -t text/uri-list; wl-paste | xclip -i -selection clipboard -rmlastnl -t text/uri-list'
+# ''' ]
+# desc = "clip to wayland clipboard"
+
+# [[manager.prepend_keymap]]
+# on  = [ "c","o" ]
+# run = ['''
+# 	shell --confirm 'for path in "$@"; do  echo -en "file://${path}\n"; done |  xclip -i -selection clipboard -rmlastnl -t text/uri-list'
+# ''' ]
+# desc = "clip to x11 clipboard"
 
 
 

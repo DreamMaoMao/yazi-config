@@ -28,26 +28,6 @@ local flush_empty_folder_status = ya.sync(function(st)
 	end
 end)
 
-local handle_path_change = ya.sync(function(st)
-	local cwd = cx.active.current.cwd
-	local ignore_caculate_size = false
-	for _, value in ipairs(st.opt_folder_size_ignore) do
-		if value == tostring(cwd) then
-			ignore_caculate_size = true
-		elseif value.."/" == tostring(cwd) then
-			ignore_caculate_size = true
-		end
-	end
-	if st.cwd ~= cwd then
-		st.cwd = cwd
-		clear_state()
-		if not ignore_caculate_size then
-			ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})			
-		end
-	end
-end)
-
-
 local set_opts_default = ya.sync(function(state)
 	if (state.opt_folder_size_ignore == nil) then
 		state.opt_folder_size_ignore = {}
@@ -56,7 +36,6 @@ end)
 
 local update_current_size = ya.sync(function(st)
 	local cwd = cx.active.current.cwd
-
 
 	for _, value in ipairs(st.opt_folder_size_ignore) do
 		if value == tostring(cwd) then
@@ -78,13 +57,28 @@ local M = {
 		end
 		
 		local function header_size(self)
+			local cwd = cx.active.current.cwd
+			if st.cwd ~= cwd then
+				st.cwd = cwd
+				local ignore_caculate_size = false
+				for _, value in ipairs(st.opt_folder_size_ignore) do
+					if value == tostring(cwd) then
+						ignore_caculate_size = true
+					elseif value.."/" == tostring(cwd) then
+						ignore_caculate_size = true
+					end
+				end
+				clear_state()
+				if not ignore_caculate_size then
+					ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})			
+				end
+			end
 			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or {}
 			return folder_size_span
 		end
 
 		Header:children_add(header_size,1500,Header.LEFT)
 
-		ps.sub("cd",handle_path_change)
 		ps.sub("delete",flush_empty_folder_status)
 		ps.sub("trash",flush_empty_folder_status)
 	end,

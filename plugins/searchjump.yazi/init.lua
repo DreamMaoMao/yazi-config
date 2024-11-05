@@ -132,9 +132,9 @@ local set_match_lable = ya.sync(function(state, url, name, file)
 	local endPos = state.match[url].endPos
 
 	if file:is_hovered() then
-		span[#span+1] = ui.Span(name:sub(1, startPos[1] - 1))
+		table.insert(span, ui.Span(name:sub(1, startPos[1] - 1)))
 	else
-		span[#span+1] =  ui.Span(name:sub(1, startPos[1] - 1)):fg(state.opt_unmatch_fg)
+		table.insert(span, ui.Span(name:sub(1, startPos[1] - 1)):fg(state.opt_unmatch_fg))
 	end
 
 	local match_str_fg
@@ -145,26 +145,26 @@ local set_match_lable = ya.sync(function(state, url, name, file)
 		match_str_fg = key[i] == first_match_lable and state.opt_first_match_str_fg or state.opt_match_str_fg
 		match_str_bg = key[i] == first_match_lable and state.opt_first_match_str_bg or state.opt_match_str_bg
 
-		span[#span+1] = ui.Span(name:sub(startPos[i], endPos[i])):fg(match_str_fg):bg(match_str_bg)
+		table.insert(span, ui.Span(name:sub(startPos[i], endPos[i])):fg(state.opt_match_str_fg):bg(state.opt_match_str_bg))
 		if i <= #key then
-			span[#span+1] = ui.Span(key[i]):fg(state.opt_lable_fg):bg(state.opt_lable_bg)
+			table.insert(span, ui.Span(key[i]):fg(state.opt_lable_fg):bg(state.opt_lable_bg))
 		end
 		if i + 1 <= #startPos then
 			if file:is_hovered() then
-				span[#span+1] =  ui.Span(name:sub(endPos[i] + 1, startPos[i + 1] - 1))
+				table.insert(span, ui.Span(name:sub(endPos[i] + 1, startPos[i + 1] - 1)))
 			else
-				span[#span+1] = ui.Span(name:sub(endPos[i] + 1, startPos[i + 1] - 1)):fg(state.opt_unmatch_fg)
+				table.insert(span, ui.Span(name:sub(endPos[i] + 1, startPos[i + 1] - 1)):fg(state.opt_unmatch_fg))
 			end
 		end
 		i = i + 1
 	end
 
 	if file:is_hovered() then
-		span[#span+1] = ui.Span(name:sub(endPos[i - 1] + 1, #name))
+		table.insert(span, ui.Span(name:sub(endPos[i - 1] + 1, #name)))
 	else
-		span[#span+1] = ui.Span(name:sub(endPos[i - 1] + 1, #name)):fg(state.opt_unmatch_fg)
+		table.insert(span, ui.Span(name:sub(endPos[i - 1] + 1, #name)):fg(state.opt_unmatch_fg))
 	end
-	return ui.Line(span)
+	return span
 end)
 
 -- update the match data after input a str
@@ -275,56 +275,36 @@ local record_match_file = ya.sync(function(state, patterns,re_match)
 	return exist_match
 end)
 
-local switch_entity_hightlights = ya.sync(function(st,fn)
-	local inc_backup = Entity._inc
-	Entity._inc = st.highlights_id - 1
-	local id = Entity:children_add(fn, 3000)
-	Entity._inc =  inc_backup
-	return id
-end)
-
 local toggle_ui = ya.sync(function(st)
-	if st.status_sj_id or st.entity_sj_highlights_id then
+	if st.highlights or st.status_sj_id then
 		Status:children_remove(st.status_sj_id)
-		Entity:children_remove(st.entity_sj_highlights_id)
-		st.status_sj_id = nil
-		st.entity_sj_highlights_id = nil
+		Entity.highlights, st.highlights, st.status_sj_id = st.highlights, nil, nil
 		if cx.active.preview.folder then
 			ya.manager_emit("peek", { force = true })
 		end
-		switch_entity_hightlights(st.highlights_function)
 		ya.render()
 		return
 	end
 
-	for _, value in ipairs(Entity._children) do
-		if value["order"] == 3000 then
-			st.highlights_function = value[1]
-			st.highlights_id = value["id"]
-			break
-		end
-	end
-	Entity:children_remove(st.highlights_id)
+	st.highlights = Entity.highlights
 
-	local function entity_highlights(self)
+	Entity.highlights = function(self)
 		local file = self._file
-		local span = {}
+		local spans = {}
 		local name = file.name:gsub("\r", "?", 1)
 
 		local url = tostring(file.url)
 
 		if st.match and st.match[url] then
-			span = set_match_lable(url, name, file)
+			spans = set_match_lable(url, name, file)
 		elseif file:is_hovered() then
-			span = ui.Span(name)
+			spans = { ui.Span(name) }
 		else
-			span = ui.Span(name):fg(st.opt_unmatch_fg)
+			spans = { ui.Span(name):fg(st.opt_unmatch_fg) }
 		end
 
-		return span
+		return ui.Line(spans)
 	end
-
-	st.entity_sj_highlights_id = switch_entity_hightlights(entity_highlights)
 
 	local function status_sj(self)
 		local style = self:style()
@@ -335,13 +315,11 @@ local toggle_ui = ya.sync(function(st)
 		}
 	end
 	st.status_sj_id = Status:children_add(status_sj,1001,Status.LEFT)
-
+	
 
 	if cx.active.preview.folder then
 		ya.manager_emit("peek", { force = true })
 	end
-
-	ya.render()
 end)
 
 local check_key_is_lable = ya.sync(function(state,final_input_str) 
@@ -377,7 +355,8 @@ local set_target_str = ya.sync(function(state, patterns, final_input_str,re_matc
 		else
 			ya.manager_emit("reveal",{ url })
 		end
-		return true
+		-- two args is (want_exit,is_match)
+		return true,true
 	end
 
 	-- clears the previously calculated data when input change
@@ -390,9 +369,9 @@ local set_target_str = ya.sync(function(state, patterns, final_input_str,re_matc
 	-- apply match data to render
 	ya.render()
 	if not exist_match and (re_match == true or patterns[1] ~= "" ) and state.opt_auto_exit_when_unmatch then
-		return true
+		return true, exist_match
 	else
-		return false
+		return false, exist_match
 	end	
 end)
 
@@ -554,11 +533,20 @@ return {
 				re_match = false
 			end
 
+			::reset::
 			flush_input_key_in_statusbar(input_str,re_match)
 
-			local want_exit = set_target_str(patterns,final_input_str,re_match)
+			local want_exit,is_match = set_target_str(patterns,final_input_str,re_match)
 			if want_exit then
 				break
+			end
+
+			-- If the string after the entered character does not match anything, -- then the string input is cancelled and keep the previous input matches status
+			if not is_match then
+				input_str,final_input_str = backout_last_input(input_str)
+				patterns = {input_str}
+				re_match = false		
+				goto reset
 			end
 			::continue::
 		end

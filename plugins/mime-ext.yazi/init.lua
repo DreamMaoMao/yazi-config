@@ -738,7 +738,7 @@ local ext_mime_map = {
 	["quox"] = "application/vnd.quobject-quoxdocument",
 	["quiz"] = "application/vnd.quobject-quoxdocument",
 	["tree"] = "application/vnd.rainstor.data",
-	["rar"] = "application/vnd.rar",
+	["rar"] = "application/x-rar",
 	["bed"] = "application/vnd.realvnc.bed",
 	["mxl"] = "application/vnd.recordare.musicxml",
 	["rlm"] = "application/vnd.resilient.logic",
@@ -1470,7 +1470,7 @@ function M:fetch()
 	end
 
 	if #mimes then
-	  ya.manager_emit("update_mimetype", { updates = mimes })
+		ya.manager_emit("update_mimetype", { updates = mimes })
 	  return 3
 	end
 	return 2

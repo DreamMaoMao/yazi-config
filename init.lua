@@ -13,7 +13,7 @@ require("searchjump"):setup({
     lable_bg = "#BA603D",
     only_current = false,
     show_search_in_statusbar = false,
-    auto_exit_when_unmatch = true,
+    auto_exit_when_unmatch = false,
     enable_capital_lable = true,
 	search_patterns = ({"%d+.1080p","第%d+集","%.E%d+","S%d+E%d+",})
 })
@@ -37,7 +37,9 @@ require("header-host"):setup({
 
 require("cd-last"):setup()
 
-require("git"):setup()
+require("git"):setup({
+    show_branch = true
+})
 
 require("current-size"):setup({
     folder_size_ignore = {"/home/wrq","/","/home"},
@@ -47,6 +49,6 @@ require("full-border"):setup()
 
 require("mime-preview"):setup()
 
--- require("session"):setup {
+-- require("session"):setup({
 -- 	sync_yanked = true,
--- }
+-- })
