@@ -33,6 +33,14 @@ return {
 		files = table.concat(urls, [[" "]])
 		args = string.format([[for path in "%s"; do echo -en "file://${path}\n"; done | wl-copy -t text/uri-list; wl-paste | xclip -i -selection clipboard -rmlastnl -t text/uri-list]], files)
 		child, _ = Command("bash"):args({"-c",args}):spawn()
+  else
+			ya.notify({
+				title = "System Clipboard",
+				content = "unknow desktop env",
+				level = "error",
+				timeout = 5,
+			})
+      return
 	end
 		local output, err = child:wait_with_output()
 
