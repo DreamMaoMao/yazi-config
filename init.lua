@@ -37,10 +37,11 @@ require("header-host"):setup({
 
 require("cd-last"):setup()
 
-require("git"):setup({
-    show_branch = true
-})
+THEME.git = THEME.git or {}
+THEME.git.ignored = ui.Style():fg("#cd98f3")
+THEME.git.untracked = ui.Style():fg("#c5bf98"):bold()
 
+require("git"):setup()
 require("current-size"):setup({
     folder_size_ignore = {"/home/wrq","/","/home"},
 })
@@ -52,3 +53,18 @@ require("mime-preview"):setup()
 -- require("session"):setup({
 -- 	sync_yanked = true,
 -- })
+
+require("mime-ext"):setup {
+	-- Expand the existing filename database (lowercase), for example:
+	-- with_files = {
+	-- 	makefile = "text/makefile",
+	-- 	-- ...
+	-- },
+
+	-- Expand the existing extension database (lowercase), for example:
+	with_exts = require("mime-preview"):get_mime_data(),
+
+	-- If the mime-type is not in both filename and extension databases,
+	-- then fallback to Yazi's preset `mime` plugin, which uses `file(1)`
+	fallback_file1 = true,
+}

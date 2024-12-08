@@ -73,7 +73,7 @@ local M = {
 					ya.manager_emit("plugin", { "current-size", args = ya.quote(tostring(cwd))})			
 				end
 			end
-			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or {}
+			local folder_size_span = (st.folder_size ~= nil and st.folder_size ~= "") and ui.Span(" [".. st.folder_size  .."]"):fg("#ced333")  or ui.Line{}
 			return folder_size_span
 		end
 
@@ -83,10 +83,10 @@ local M = {
 		ps.sub("trash",flush_empty_folder_status)
 	end,
 
-	entry = function(_, args)
+	entry = function(_, job)
 		local output
 
-
+		local args = job.args
 		local folder_size = ""
 		output = Command("du"):args({"-sh",args[1].."/"}):output()
 

@@ -243,7 +243,8 @@ local function get_bind_key()
 end
 
 return {
-	entry = function(_,args)
+	entry = function(_,job)
+		local args = job.args
 		local action = args[1]
 		if not action then
 			return

@@ -394,10 +394,10 @@ end
 local function count_files(url, max)
 	local cmd
 	if ya.target_family() == "windows" then
-		cmd = cx.active.conf.show_hidden and "dir /a " or "dir "
+		cmd = cx.active.pref.show_hidden and "dir /a " or "dir "
 		cmd = cmd .. ya.quote(tostring(url))
 	else
-		cmd = cx.active.conf.show_hidden and "ls -A  " or "ls "
+		cmd = cx.active.pref.show_hidden and "ls -A  " or "ls "
 		cmd = "test -r " .. ya.quote(tostring(url)) .. "&&" .. cmd .. ya.quote(tostring(url)) .. " | wc -l"
 	end
 
@@ -480,8 +480,7 @@ local toggle_ui = ya.sync(function(st)
 	Status.mode = function(self)
 		local style = self:style()
 		return ui.Line {
-			ui.Span(THEME.status.separator_open):fg(style.bg),
-			ui.Span(" KJ-" .. tostring(cx.active.mode):upper() .. " "):style(style),
+			ui.Span(" KJ-" .. tostring(cx.active.mode):upper() .. " "):style(style.main),
 		}
 	end
 
@@ -535,6 +534,7 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
 			return true
 		elseif special_key_str == "<Enter>" then
 			ya.manager_emit("open", {})
+			return true
 		elseif special_key_str == "<Left>" then
 			ya.manager_emit("leave", {})
 			return false
@@ -550,7 +550,7 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
 		elseif special_key_str == "<Space>" then
 			local under_cursor_file = cx.active.current.window[folder.cursor - folder.offset + 1]
 			local toggle_state = under_cursor_file:is_selected() and "false" or "true"
-			ya.manager_emit("select", { state = toggle_state })
+			ya.manager_emit("toggle", { state = toggle_state })
 			ya.manager_emit("arrow", { 1 })
 			return false
 		elseif special_key_str == "h"then
@@ -818,7 +818,7 @@ local add_cwd_status_watch = ya.sync(function(state)
 			local times = state.times and state.times or ""
 			ya.manager_emit("plugin", { "keyjump", args = ya.quote(state.type).." "..times})	
 		end
-		return {}
+		return ui.Line{}
 	end
 	state.header_status_id = Header:children_add(cwd_status,200,Header.LEFT)
 end)
@@ -832,11 +832,12 @@ return {
 		end
 	end,
 
-	entry = function(_, args)
+	entry = function(_, job)
 
 		set_opts_default()
 		add_cwd_status_watch()
 
+		local args = job.args
 		local action = args[1]
 		local want_exit = false
 

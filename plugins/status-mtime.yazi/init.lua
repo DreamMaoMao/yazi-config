@@ -11,7 +11,7 @@ local function setup(state,config)
 		local style_mtime = ui:Style()
 		style_mtime:fg(color)
 		style_mtime:bold(true)
-		local time = (h.cha.modified or 0) // 1
+		local time = (h.cha.mtime or 0) // 1
 		if time == 0 then
 			return ui.Line("")
 		elseif os.date("%Y", time) == os.date("%Y") then

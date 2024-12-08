@@ -2,8 +2,8 @@
 
 keymap = [
 
-	{ on = [ "<C-A-k>" ],    run = "plugin --sync arrow-parent --args=-1", desc = "arrow parent up" },
-	{ on = [ "<C-A-j>" ],  run = "plugin --sync arrow-parent --args=1",  desc = "arrow parent down" },
+	{ on = [ "<A-k>" ],    run = "plugin arrow-parent --args=-1", desc = "arrow parent up" },
+	{ on = [ "<A-j>" ],  run = "plugin arrow-parent --args=1",  desc = "arrow parent down" },
 	{ on = [ "U" ], run = "plugin cd-last", desc = "cd last path" },
 
 	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Save current position as a bookmark" },
@@ -57,8 +57,8 @@ keymap = [
 	{ on = [ "H" ], run = "back",    desc = "Go back to the previous directory" },
 	{ on = [ "L" ], run = "forward", desc = "Go forward to the next directory" },
 
-	{ on = [ "<A-k>" ], run = "seek -5", desc = "seek up 5 units in the preview" },
-	{ on = [ "<A-j>" ], run = "seek 5",  desc = "seek down 5 units in the preview" },
+	{ on = [ "<S-A-K>" ], run = "seek -5", desc = "seek up 5 units in the preview" },
+	{ on = [ "<S-A-J>" ], run = "seek 5",  desc = "seek down 5 units in the preview" },
 
 	{ on = [ "<Up>" ],    run = "arrow -1", desc = "Move cursor up" },
 	{ on = [ "<Down>" ],  run = "arrow 1",  desc = "Move cursor down" },
@@ -66,11 +66,11 @@ keymap = [
 	{ on = [ "<Right>" ], run = "enter",    desc = "Enter the child directory" },
 
 	# Selection
-	{ on = [ "<Space>" ], run = [ "select --state=none", "arrow 1" ], desc = "Toggle the current selection state" },
+	{ on = [ "<Space>" ], run = [ "toggle --state=none", "arrow 1" ], desc = "Toggle the current selection state" },
 	{ on = [ "v" ],       run = "visual_mode",                        desc = "Enter visual mode (selection mode)" },
 	{ on = [ "V" ],       run = "visual_mode --unset",                desc = "Enter visual mode (unset mode)" },
-	{ on = [ "<C-a>" ],   run = "select_all --state=true",            desc = "Select all files" },
-	{ on = [ "<C-r>" ],   run = "select_all --state=none",            desc = "Inverse selection of all files" },
+	{ on = [ "<C-a>" ],   run = "toggle_all --state=true",            desc = "Select all files" },
+	{ on = [ "<C-r>" ],   run = "toggle_all --state=none",            desc = "Inverse selection of all files" },
 
 	# Operation
 	{ on = [ "u","s"], 	run = '''shell "$SHELL" --block --confirm''', desc = "Open shell here" },

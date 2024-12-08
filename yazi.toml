@@ -80,7 +80,7 @@ rules = [
 	{ mime = "video/*", use = ["video"] },
 	{ mime = "application/octet-stream",use = ["video"]},
 	{ mime = "audio/*", use = ["audio"] },
-	{ mime = "inode/x-empty", use = ["text"] },
+	{ mime = "inode/empty", use = ["text"] },
 	{ mime = "application/json", use = ["text"] },
 
 	{ mime = "application/zip", use = ["archive"] },
@@ -108,20 +108,54 @@ enabled = false
 
 [plugin]
 prepend_previewers = [
-  { name = "*.md", run = "glow" },
-  { name = "*.epub", run = "epub" },
+  { mime= "application/octet-stream", run = "video"}
 ]
 
 prepend_preloaders= [
-  { name = "*.epub", run = "epub" },
+	# { mime = "image/{avif,hei?,jxl,svg+xml}", run = "disable" },
+	# { mime = "image/*", run = "disable" },
+	# Video
+	{ mime = "video/*", run = "disable" },
+	# PDF
+	# { mime = "application/pdf", run = "disable" },
+	# Font
+	{ mime = "font/*", run = "disable" },
+	{ mime = "application/vnd.ms-opentype", run = "disable" },
 ]
 
+[[plugin.prepend_fetchers]]
+id   = "mime"
+if   = "!(mime|dummy)"
+name = "*"
+run  = "mime-ext"
+prio = "high"
 
-fetchers = [
-	# Mimetype
-	{ id = "mime-ext", name = "*", run = "mime-ext", prio = "high" },
-	{ id = "git", name = "*", run = "git", prio = "normal" },
-	{ id = "git", name = "*/", run = "git", prio = "normal" },
-	{ id = "current-size", name = "*/", run = "current-size", prio = "normal" },
-	{ id = "current-size", name = "*", run = "current-size",prio = "normal" },
-]
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"
+
+
+[[plugin.prepend_fetchers]]
+id   = "current-size"
+name = "*"
+run  = "current-size"
+
+[[plugin.prepend_fetchers]]
+id   = "current-size"
+name = "*/"
+run  = "current-size"
+
+# fetchers = [
+# 	# Mimetype
+# 	{ id = "mime-ext", name = "*", run = "mime-ext", prio = "high" },
+# 	{ id = "git", name = "*", run = "git", prio = "normal" },
+# 	{ id = "git", name = "*/", run = "git", prio = "normal" },
+# 	{ id = "current-size", name = "*/", run = "current-size", prio = "normal" },
+# 	{ id = "current-size", name = "*", run = "current-size",prio = "normal" },
+# ]

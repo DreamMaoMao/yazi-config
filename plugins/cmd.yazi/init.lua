@@ -2,7 +2,8 @@ local state = ya.sync(function() return cx.active.current.cwd end)
 
 local function fail(s, ...) ya.notify { title = "Fzf", content = string.format(s, ...), timeout = 5, level = "error" } end
 
-local function entry(_, args)
+local function entry(_, job)
+	local args = job.args
 	local _permit = ya.hide()
 	local cwd = tostring(state())
 	local cmd = args[1]
@@ -32,3 +33,4 @@ local function entry(_, args)
 end
 
 return { entry = entry }
+

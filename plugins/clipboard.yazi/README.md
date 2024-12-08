@@ -1,8 +1,10 @@
-# win-clipboard.yazi
-Copy files to the clipboard by calling windows build-incopy function without generating disk garbage
+# clipboard.yazi
+Copy files to the clipboard
 
 ## dependcy
-- powershell
+-  Windows:powershell
+-  Linux x11 : xclip
+- Linux wayland : wl-clipboard,xclip(xwayland)
 
 > [!NOTE]
 > You need yazi 3.x for this plugin to work.
@@ -14,6 +16,6 @@ Copy or install this plugin and add the following keymap to your `manager.prepen
 
 ```toml
 on = "<C-y>"
-run = ["plugin win-clipboard"]
+run = ["plugin clipboard"]
 ```
 

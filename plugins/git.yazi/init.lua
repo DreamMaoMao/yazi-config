@@ -128,7 +128,7 @@ local M = {
 
 		local function linemode_git(self)
 			local f = self._file
-			local git_span = {}
+			local git_span = ui.Line{}
 			local git_status
 			if st.git_branch ~= nil and st.git_branch ~= "" then
 				local name = f.name:gsub("\r", "?", 1)
@@ -161,13 +161,13 @@ local M = {
 				clear_state()
 				ya.manager_emit("plugin", { "git"})		
 			end
-			return {}				
+			return ui.Line{}				
 		end
 		Header:children_add(cwd_change_detect,8000,Header.LEFT)
 
 		-- add git branch status in header 
 		local function header_git(self)
-			return (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. st.git_is_dirty .. ">"):fg("#f6a6da")} or ui.Line {}				
+			return (st.git_branch and st.git_branch ~= "") and ui.Line {ui.Span(" <".. st.git_branch .. st.git_is_dirty .. ">"):fg("#f6a6da")} or ui.Line{}				
 		end
 		if st.opt_show_brach then
 			Header:children_add(header_git,1400,Header.LEFT)
@@ -193,9 +193,9 @@ local M = {
 
 		output = result.stdout
 		if output ~= nil and  output ~= "" then
-			local split_output = string_split(output:sub(1,-2),"/")
+			local split_output = string_split(output:sub(1,-2),"refs/heads/")
 			
-			git_branch = split_output[3]
+			git_branch = split_output[2]
 		elseif is_in_git_dir() then
 			git_branch = nil
 		else

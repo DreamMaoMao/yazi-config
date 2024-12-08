@@ -30,7 +30,8 @@ local read_lastpath = ya.sync(function(state)
 end)
 
 return {
-	entry = function(_,args)
+	entry = function(_,job)
+		local args = job.args
 		local action = args[1]
 		if not action then
 			return
