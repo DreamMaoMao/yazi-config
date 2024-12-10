@@ -2,7 +2,14 @@
 
 keymap = [
 
-	{ on = [ "<A-k>" ],    run = "plugin arrow-parent --args=-1", desc = "arrow parent up" },
+  	# Spotting
+	{ on = "<Tab>", run = "spot", desc = "Spot hovered file" },
+
+	{ on = [ "M","a" ], run = "plugin autofilter --args='save'", desc = "Add filter for this path" },
+	{ on = [ "M","d" ], run = "plugin autofilter --args='delete'", desc = "delete filter" },
+	{ on = [ "M","D" ], run = "plugin autofilter --args='delete_all'", desc = "delete all filter" },
+	
+  { on = [ "<A-k>" ],    run = "plugin arrow-parent --args=-1", desc = "arrow parent up" },
 	{ on = [ "<A-j>" ],  run = "plugin arrow-parent --args=1",  desc = "arrow parent down" },
 	{ on = [ "U" ], run = "plugin cd-last", desc = "cd last path" },
 
@@ -157,6 +164,7 @@ keymap = [
 	{ on = [ "g", "d" ],       run = "cd ~/down",   desc = "Go to downloads" },
 	{ on = [ "g", "t" ],       run = "cd ~/tool/",          desc = "Go to tool" },
 	{ on = [ "g", "o" ],       run = "cd ~/video",          desc = "Go to video" },
+	{ on = [ "g", "y" ],       run = "cd ~/.config/yazi/",          desc = "Go to video" },
 	{ on = [ "g", "i" ],       run = "cd ~/Images",          desc = "Go to image" },
 	{ on = [ "g", "r" ],       run = "cd /",          desc = "Go to /" },
 	{ on = [ "g", "j" ],       run = "cd /home/wrq/deskenv/dev",          desc = "Go to dev" },

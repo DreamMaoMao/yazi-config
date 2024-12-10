@@ -1057,9 +1057,6 @@ function M:setup(opts)
 end
 
 function M:fetch(job)
-	-- TODO: remove this once Yazi 0.4 is released
-	local not_v4 = not job
-	job = job or self
 
 	local opts = options()
 	local merged_files = ya.dict_merge(FILES, opts.with_files or {})
@@ -1091,7 +1088,7 @@ function M:fetch(job)
 
 	if #unknown > 0 then
 		job.files = unknown
-		return not_v4 and require("mime").fetch(job) or require("mime"):fetch(job)
+		return require("mime"):fetch(job)
 	end
 
 	return 1

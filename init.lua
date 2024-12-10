@@ -37,9 +37,6 @@ require("header-host"):setup({
 
 require("cd-last"):setup()
 
-THEME.git = THEME.git or {}
-THEME.git.ignored = ui.Style():fg("#cd98f3")
-THEME.git.untracked = ui.Style():fg("#c5bf98"):bold()
 
 require("git"):setup()
 require("current-size"):setup({
@@ -50,6 +47,7 @@ require("full-border"):setup()
 
 require("mime-preview"):setup()
 
+require("autofilter"):setup()
 -- require("session"):setup({
 -- 	sync_yanked = true,
 -- })
