@@ -75,6 +75,10 @@ path = { fg = "#8bca4b", bold = true }
 # Owner
 
 # : }}}
+[pick]
+border   = { fg = "#DD9400" }
+active   = { fg = "#f866bb", bold = true }
+inactive = {}
 
 
 # : Select {{{

@@ -1,6 +1,6 @@
 [manager]
 layout         = [ 1, 4, 3 ]
-sort_by        = "extension"
+sort_by        = "natural"
 sort_sensitive = true
 sort_reverse   = false
 sort_dir_first = true
@@ -50,6 +50,7 @@ image = [
 	{ run = 'feh "$@"',  orphan = true, desc = "feh" , for = "linux"},
 ]
 video = [
+	{ run = 'mpv "$@" ', orphan = true, desc = "mpv" , for = "linux" },
 	{ run = 'smplayer "$@" ', orphan = true, desc = "smplayer" , for = "linux" },
 	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
 

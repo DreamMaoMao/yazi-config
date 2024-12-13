@@ -63,6 +63,13 @@ local load_file_to_state = ya.sync(function(state,filename)
 		return
 	end
 
+	local status, mime_preview_module = pcall(require, "mime-preview")
+	if status then 	-- mime-preview module exists
+		state.ext_mime_map = mime_preview_module:get_mime_data() 
+	else
+		state.ext_mime_map = {}
+	end
+
     local file = io.open(filename, "r")
 	if file == nil then 
 		return
@@ -119,7 +126,13 @@ local save_autofilter = ya.sync(function(state,word)
 end)
 
 local delete_autofilter = ya.sync(function(state)
+
 	local key = tostring(cx.active.current.cwd)
+
+	if state.autofilter[key] == nil then
+		return
+	end
+
 	ya.notify {
 		title = "autofilter",
 		content = "autofilter:<"..state.autofilter[key].word .."> deleted",
@@ -158,13 +171,7 @@ end
 
 local flush_mime_by_ext = ya.sync(function(state)
 	local files =  cx.active.current.window
-	local ext_mime_map
-	local status, mime_preview_module = pcall(require, "mime-preview")
-	if status then 	-- mime-preview module exists
-		ext_mime_map = mime_preview_module:get_mime_data() 
-	else
-		ext_mime_map = {}
-	end
+
 	local mimes = {}
 	state.unmatch_ext_urls = {}
 
@@ -174,7 +181,7 @@ local flush_mime_by_ext = ya.sync(function(state)
 	  local ext = tostring(file.name):match("^.+%.(.+)$")
 	  if ext then
 		ext = ext:lower()
-		local ext_mime = ext_mime_map[ext]
+		local ext_mime = state.ext_mime_map[ext]
 		if ext_mime then
 		  mimes[url] = ext_mime
 		  goto continue
