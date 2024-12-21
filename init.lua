@@ -1,3 +1,23 @@
+require("keyjump"):setup({
+	icon_fg = "#fda1a1",
+	first_key_fg = "#df6249",
+    go_table = { -- `g` to open go menu(only global mode)
+		{ on = { "w" },       run = "cd ~/文档/WeChat_Data/home",       desc = "Go to weixin" },
+		{ on = { "n" },       run = "cd ~/_install",       desc = "Go to _install" },
+		{ on = { "h" },       run = "cd ~",             desc = "Go to home" },
+		{ on = { "c" },       run = "cd ~/.config",     desc = "Go to config" },
+		{ on = { "u" },       run = "cd /media/UUI/",     desc = "Go to Mobile disk" },
+		{ on = { "d" },       run = "cd ~/down",   desc = "Go to downloads" },
+		{ on = { "t" },       run = "cd ~/tool/",          desc = "Go to tool" },
+		{ on = { "o" },       run = "cd ~/video",          desc = "Go to video" },
+		{ on = { "y" },       run = "cd ~/.config/yazi/",          desc = "Go to video" },
+		{ on = { "i" },       run = "cd ~/Images",          desc = "Go to image" },
+		{ on = { "r" },       run = "cd /",          desc = "Go to /" },
+		{ on = { "j" },       run = "cd /home/wrq/deskenv/dev",          desc = "Go to dev" },
+		{ on = { "k" },       run = "cd /home/wrq/deskenv/master",       desc = "Go to master" },
+	}
+})
+
 require("easyjump"):setup({
 	icon_fg = "#fda1a1",
     first_key_fg = "#df6249"
@@ -15,7 +35,7 @@ require("searchjump"):setup({
     show_search_in_statusbar = false,
     auto_exit_when_unmatch = false,
     enable_capital_lable = true,
-	search_patterns = ({"%d+.1080p","第%d+集","%.E%d+","S%d+E%d+",})
+	search_patterns = ({"%d+.1080p","第%d+集","第%d+话","%.E%d+","S%d+E%d+",})
 })
 
 require("status-owner"):setup({
@@ -48,6 +68,7 @@ require("full-border"):setup()
 require("mime-preview"):setup()
 
 require("autofilter"):setup()
+require("autosort"):setup()
 -- require("session"):setup({
 -- 	sync_yanked = true,
 -- })

@@ -8,6 +8,9 @@ keymap = [
 	{ on = [ "M","a" ], run = "plugin autofilter --args='save'", desc = "Add filter for this folder" },
 	{ on = [ "M","d" ], run = "plugin autofilter --args='delete'", desc = "Delete filter for this folder" },
 	{ on = [ "M","D" ], run = "plugin autofilter --args='delete_all'", desc = "Delete all filter" },
+	{ on = [ "O","a" ], run = "plugin autosort --args='save'", desc = "Add sort for this folder" },
+	{ on = [ "O","d" ], run = "plugin autosort --args='delete'", desc = "Delete sort for this folder" },
+	{ on = [ "O","D" ], run = "plugin autosort --args='delete_all'", desc = "Delete all filter" },
 	
   { on = [ "<A-k>" ],    run = "plugin arrow-parent --args=-1", desc = "arrow parent up" },
 	{ on = [ "<A-j>" ],  run = "plugin arrow-parent --args=1",  desc = "arrow parent down" },
@@ -20,7 +23,7 @@ keymap = [
 	{ on = [ "u","D" ],	run = "plugin bookmarks --args='delete_all'", desc = "Delete all bookmarks" },
 	{ on = [ "u","l"], run = "plugin lastopen --args='jump'",         desc = "jump to last open file" },
 
-	{ on = [ "I" ], run = "plugin keyjump --args='select'", desc = "easyjump" },
+	{ on = [ "I" ], run = "plugin keyjump --args='global'", desc = "keyjump" },
 	{ on = [ "i" ], run = "plugin easyjump --args=''", desc = "easyjump" },
 	{ on = [ "s" ], run = "plugin searchjump --args=''", desc = "searchjump" },
 
@@ -121,18 +124,20 @@ keymap = [
 
 
 	# Sort
-	{ on = [ "m", "a" ], run = "sort alphabetical --dir_first",           desc = "Sort alphabetically, directories first" },
-	{ on = [ "m", "A" ], run = "sort alphabetical --reverse --dir_first", desc = "Sort alphabetically, directories first (reverse)" },
-	{ on = [ "m", "c" ], run = "sort btime --dir_first",                desc = "Sort by creation time, directories first" },
-	{ on = [ "m", "C" ], run = "sort btime --reverse --dir_first",      desc = "Sort by creation time, directories first (reverse)" },
-	{ on = [ "m", "M" ], run = "sort mtime --dir_first",               desc = "Sort by modified time, directories first" },
-	{ on = [ "m", "m" ], run = "sort mtime --reverse --dir_first",     desc = "Sort by modified time, directories first (reverse)" },
-	{ on = [ "m", "n" ], run = "sort natural --dir_first",                desc = "Sort naturally, directories first" },
-	{ on = [ "m", "N" ], run = "sort natural --reverse --dir_first",      desc = "Sort naturally, directories first (reverse)" },
-	{ on = [ "m", "s" ], run = "sort size --dir_first",                   desc = "Sort by size, directories first" },
-	{ on = [ "m", "S" ], run = "sort size --reverse --dir_first",         desc = "Sort by size, directories first (reverse)" },
-	{ on = [ "m", "e" ], run = "sort extension --dir_first",         	   desc = "Sort by extension" },
-	{ on = [ "m", "E" ], run = "sort extension --reverse --dir_first",    desc = "Sort by extension (reverse)" },
+	# Sorting
+	{ on = [ "m", "M" ], run = [ "sort mtime --reverse=no"], desc = "Sort by modified time" },
+	{ on = [ "m", "m" ], run = [ "sort mtime --reverse"],    desc = "Sort by modified time (reverse)" },
+	{ on = [ "m", "b" ], run = [ "sort btime --reverse=no"], desc = "Sort by birth time" },
+	{ on = [ "m", "B" ], run = [ "sort btime --reverse"],    desc = "Sort by birth time (reverse)" },
+	{ on = [ "m", "e" ], run = "sort extension --reverse=no",                   desc = "Sort by extension" },
+	{ on = [ "m", "E" ], run = "sort extension --reverse",                      desc = "Sort by extension (reverse)" },
+	{ on = [ "m", "a" ], run = "sort alphabetical --reverse=no",                desc = "Sort alphabetically" },
+	{ on = [ "m", "A" ], run = "sort alphabetical --reverse",                   desc = "Sort alphabetically (reverse)" },
+	{ on = [ "m", "n" ], run = "sort natural --reverse=no",                     desc = "Sort naturally" },
+	{ on = [ "m", "N" ], run = "sort natural --reverse",                        desc = "Sort naturally (reverse)" },
+	{ on = [ "m", "s" ], run = [ "sort size --reverse=no"],   desc = "Sort by size" },
+	{ on = [ "m", "S" ], run = [ "sort size --reverse"],      desc = "Sort by size (reverse)" },
+	{ on = [ "m", "r" ], run = "sort random --reverse=no",                      desc = "Sort randomly" },
 	# Tabs
 	{ on = [ "t" ], run = "tab_create --current", desc = "Create a new tab using the current path" },
 

@@ -33,29 +33,37 @@ local function delete_lines_by_content(file_path, pattern)
     file:close()
 end
 
+-- load from file to state
+local get_autofilter_data = ya.sync(function(state)
+
+	return state.autofilter
+
+end)
+
 -- save table to file
-local save_to_file = ya.sync(function(state,filename)
+local function save_to_file(filename)
+	local data = get_autofilter_data()
     local file = io.open(filename, "w+")
-	for path, f in pairs(state.autofilter) do
+	for path, f in pairs(data) do
 		file:write(string.format("%s###%s",path,f.word), "\n")
 	end
     file:close()
-end)
+end
 
 local function file_exists(name)
+	local command
 	if ya.target_family() == "windows" then
-    	local command = "IF EXIST " .. name .. " (echo 1) ELSE (echo 0)"
-    	local output = io.popen(command):read("*a")
-    	output = output:gsub("%s+", "")
-    return output == "1"
+    	command = "IF EXIST " .. name .. " (echo 1) ELSE (echo 0)"
 	else
-		local f=io.open(name,"r")
-		if f~=nil then io.close(f) return true else return false end
+		command = 'test -e ' ..'"'.. name ..'"'.. ' && echo 1 || echo 0'
 	end
+    local output = io.popen(command):read("*a")
+    output = output:gsub("%s+", "")
+    return output == "1"
 end
 
 -- load from file to state
-local load_file_to_state = ya.sync(function(state,filename)
+local load_file_to_state = ya.sync(function(state,data)
 
 	if state.autofilter == nil then 
 		state.autofilter = {}
@@ -70,28 +78,10 @@ local load_file_to_state = ya.sync(function(state,filename)
 		state.ext_mime_map = {}
 	end
 
-    local file = io.open(filename, "r")
-	if file == nil then 
-		return
-	end
+	state.autofilter = data
 
-	for line in file:lines() do
-		line = line:gsub("[\r\n]", "")
-		local autofilter = string_split(line,"###")
-		if autofilter == nil or #autofilter < 2 then
-			goto nextline
-		end
-		if file_exists(autofilter[1]) then
-			state.autofilter[autofilter[1]] = {
-				word = autofilter[2],
-			}
-		end
+	state.force_fluse_header = true
 
-		::nextline::
-	end
-    file:close()
-	--auto clean no-exists-path line
-	save_to_file(filename)
 end)
 
 
@@ -122,7 +112,7 @@ local save_autofilter = ya.sync(function(state,word)
 	ya.manager_emit("filter_do", { word, smart = true })
 	state.force_fluse_header = true
 	state.force_fluse_mime = true
-	save_to_file(SERIALIZE_PATH)
+	ya.manager_emit("plugin",{"autofilter",args="resave"})
 end)
 
 local delete_autofilter = ya.sync(function(state)
@@ -143,7 +133,7 @@ local delete_autofilter = ya.sync(function(state)
 	ya.manager_emit("filter_do", { "", smart = true })
 	state.force_fluse_header = true
 	state.force_fluse_mime = true
-  	save_to_file(SERIALIZE_PATH)
+	ya.manager_emit("plugin",{"autofilter",args="resave"})
 end)
 
 local delete_all_autofilter = ya.sync(function(state)
@@ -255,8 +245,34 @@ return {
 			return
 		end
 
+		if action == "resave" then
+			save_to_file(SERIALIZE_PATH)
+		end
+
 		if action == "init" then
-			load_file_to_state(SERIALIZE_PATH)
+			local data = {}
+			local file = io.open(SERIALIZE_PATH, "r")
+			if file then 
+		
+				for line in file:lines() do
+					line = line:gsub("[\r\n]", "")
+					local autofilter = string_split(line,"###")
+					if autofilter == nil or #autofilter < 2 then
+						goto nextline
+					end
+					if file_exists(autofilter[1]) then
+						data[autofilter[1]] = {
+							word = autofilter[2],
+						}
+					end
+				
+					::nextline::
+				end
+				file:close()
+			end
+			--auto clean no-exists-path line
+			load_file_to_state(data)
+			save_to_file(SERIALIZE_PATH)
 		end
 
 		if action == "flush_mime_by_ext" then

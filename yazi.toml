@@ -51,12 +51,11 @@ image = [
 ]
 video = [
 	{ run = 'mpv "$@" ', orphan = true, desc = "mpv" , for = "linux" },
-	{ run = 'smplayer "$@" ', orphan = true, desc = "smplayer" , for = "linux" },
 	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
 
 ]
 audio = [
-	{ run = 'smplayer "$@" ' , orphan = true, desc = "smplayer" , for = "linux"},
+	{ run = 'mpv "$@" ' , orphan = true, desc = "mpv" , for = "linux"},
 ]
 
 document = [
