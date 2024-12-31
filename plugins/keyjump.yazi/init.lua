@@ -317,15 +317,10 @@ end)
 
 local function split_yazi_cmd_arg(cmd)
 	local cmd_table = {}
-	local i = string.find(cmd, " ")
-	if i then
-		local first = string.sub(cmd, 1, i - 1)
-		local second = string.sub(cmd, i + 1)
-		table.insert(cmd_table, first)
-		table.insert(cmd_table, second)
-		return cmd_table
+	for word in string.gmatch(cmd, "%S+") do
+		table.insert(cmd_table, word)
 	end
-	return nil
+	return cmd_table
 end
 
 local function count_preview_files(st)
@@ -445,7 +440,7 @@ local apply = ya.sync(function(state, arg_cand, arg_current_num, arg_parent_num,
 			ya.manager_emit("enter", {})
 			ya.manager_emit(
 				"arrow",
-				{ cand - current_entry_num - parent_entry_num - 1 + preview_folder.offset - preview_folder.cursor }
+				{ cand - current_entry_num - parent_entry_num - 1 + cx.active.preview.skip - preview_folder.cursor }
 			)
 
 		-- hit go
@@ -796,7 +791,7 @@ return {
 			end
 			local cmd = split_yazi_cmd_arg(go_table[cand].run)
 			recaculate_preview_num(cmd[2])
-			ya.manager_emit(cmd[1], { cmd[2] }) 
+			ya.manager_emit(cmd[1], { cmd[2], args=cmd[3] }) 
 			set_keep_hook(true)
 			go_again()
 		elseif want_exit == false and action and action ~= "" then

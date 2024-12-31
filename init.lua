@@ -15,6 +15,7 @@ require("keyjump"):setup({
 		{ on = { "r" },       run = "cd /",          desc = "Go to /" },
 		{ on = { "j" },       run = "cd /home/wrq/deskenv/dev",          desc = "Go to dev" },
 		{ on = { "k" },       run = "cd /home/wrq/deskenv/master",       desc = "Go to master" },
+
 	}
 })
 

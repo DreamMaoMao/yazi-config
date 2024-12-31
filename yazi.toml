@@ -108,6 +108,10 @@ enabled = false
 
 [plugin]
 prepend_previewers = [
+  { name = "*.md", run = "glow" },
+  { name = "*.html", run = "html" },
+  { mime = "text/html", run = "html" },
+  { mime = "application/epub+zip", run = "epub-preview" },
   { mime= "application/octet-stream", run = "video"}
 ]
 
@@ -150,6 +154,7 @@ run  = "current-size"
 id   = "current-size"
 name = "*/"
 run  = "current-size"
+
 
 # fetchers = [
 # 	# Mimetype
