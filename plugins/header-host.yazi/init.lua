@@ -6,7 +6,7 @@ local function setup(state,config)
 			if ya.target_family() ~= "unix" then
 				return ui.Line {}
 			end
-			return ui.Span(ya.user_name() .. "@" .. ya.host_name() .. ":"):fg(color):bold()
+			return ui.Span(ya.user_name() .. "@" .. ya.host_name() .. ":"):fg(color)
 	end
 
 	Header:children_add(Header_host,1,Header.LEFT)

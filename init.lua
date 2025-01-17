@@ -36,7 +36,7 @@ require("searchjump"):setup({
     show_search_in_statusbar = false,
     auto_exit_when_unmatch = false,
     enable_capital_lable = true,
-	search_patterns = ({"%d+.1080p","第%d+集","第%d+话","%.E%d+","S%d+E%d+",})
+	search_patterns = ({"hell[dk]d","%d+.1080p","第%d+集","第%d+话","%.E%d+","S%d+E%d+",})
 })
 
 require("status-owner"):setup({
@@ -88,3 +88,8 @@ require("mime-ext"):setup {
 	-- then fallback to Yazi's preset `mime` plugin, which uses `file(1)`
 	fallback_file1 = true,
 }
+
+-- require("zoxide"):setup {
+-- 	update_db = true,
+-- }
+--

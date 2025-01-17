@@ -14,7 +14,7 @@ tab_size        = 2
 max_width       = 600
 max_height      = 900
 cache_dir       = ""
-image_delay     = 30
+image_delay     = 0
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
@@ -164,3 +164,4 @@ run  = "current-size"
 # 	{ id = "current-size", name = "*/", run = "current-size", prio = "normal" },
 # 	{ id = "current-size", name = "*", run = "current-size",prio = "normal" },
 # ]
+#
