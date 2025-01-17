@@ -38,6 +38,9 @@ local update_current_size = ya.sync(function(st)
 	local cwd = cx.active.current.cwd
 
 	for _, value in ipairs(st.opt_folder_size_ignore) do
+		if value:sub(1,1) == "~" then
+			value = os.getenv("HOME")..value:sub(2,value:len())
+		end
 		if value == tostring(cwd) then
 			return
 		elseif value.."/" == tostring(cwd) then
@@ -62,6 +65,9 @@ local M = {
 				st.cwd = cwd
 				local ignore_caculate_size = false
 				for _, value in ipairs(st.opt_folder_size_ignore) do
+					if value:sub(1,1) == "~" then
+						value = os.getenv("HOME")..value:sub(2,value:len())
+					end
 					if value == tostring(cwd) then
 						ignore_caculate_size = true
 					elseif value.."/" == tostring(cwd) then

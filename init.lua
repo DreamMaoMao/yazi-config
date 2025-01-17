@@ -61,7 +61,7 @@ require("cd-last"):setup()
 
 require("git"):setup()
 require("current-size"):setup({
-    folder_size_ignore = {"/home/wrq","/","/home"},
+    folder_size_ignore = {"~","/","/home"},
 })
 
 require("full-border"):setup()
