@@ -3,7 +3,7 @@
 # : Manager {{{
 
 [manager]
-cwd = { fg = "#eec173" }
+cwd = { fg = "#cfc251" }
 
 # Hovered
 hovered         = { fg = "#000000", bg = "#ac9259" }
@@ -76,8 +76,8 @@ path = { fg = "#8bca4b", bold = true }
 
 # : }}}
 [pick]
-border   = { fg = "#DD9400" }
-active   = { fg = "#f866bb", bold = true }
+border   = { fg = "#a2c45f" }
+active   = { fg = "#aed265", bold = true }
 inactive = {}
 
 
@@ -101,6 +101,9 @@ selected = { reversed = true }
 
 # : }}}
 
+[spot]
+border = { fg = "#a2c45f" }
+title  = { fg = "#aed265" }
 
 [notify]
 title_info  = { fg = "#7daea3" }
@@ -141,7 +144,7 @@ hovered = { underline = true }
 # : Which {{{
 
 [which]
-mask            = { bg = "#201B14" }
+# mask            = { bg = "#0F0D0A" }
 cand            = { fg = "#99ed6b" }
 rest            = { fg = "#3c3937" }
 desc            = { fg = "#d5af6d" }
@@ -165,13 +168,13 @@ footer  = { fg = "#000000", bg = "#EC8C1F" }
 
 rules = [
 	# Images
-	{ mime = "image/*", fg = "#EC8C1F" },
+	{ mime = "image/*", fg = "#e2a767" },
 
 	# Videos
-	{ mime = "video/*", fg = "#8bca4b" },
-	{ mime = "application/octet-stream", fg = "#8bca4b" },
-	{ mime = "video/MP2T", fg = "#8bca4b" },
-	{ mime = "application/vnd.rn-realmedia", fg = "#8bca4b" },
+	{ mime = "video/*", fg = "#8ed449" },
+	{ mime = "application/octet-stream", fg = "#8ed449" },
+	{ mime = "video/MP2T", fg = "#8ed449" },
+	{ mime = "application/vnd.rn-realmedia", fg = "#8ed449" },
 	{ mime = "audio/*", fg = "#71acc8" },
 
 	# Archives
@@ -182,7 +185,7 @@ rules = [
 	{ mime = "application/x-tar", fg = "#e98d8d" },
 	{ mime = "application/x-7z-compressed", fg = "#e98d8d" },
 	{ mime = "application/x-rar", fg = "#e98d8d" },
-	{ mime = "inode/directory", fg = "#d5af6d" },
+	{ mime = "inode/directory", fg = "#cbab75" },
 	{ mime = "text/x-script.python", fg = "#cd98f3" },
 	{ mime = "text/x-shellscript", fg = "#cd98f3" },
 	{ mime = "text/x-c", fg = "#cd98f3" },
@@ -199,8 +202,8 @@ rules = [
 	{ mime = "text/setting", fg = "#a3cc43" },
 	{ mime = "application/json", fg = "#a3cc43" },
 	{ mime = "application/x-pie-executable", fg = "#36bb4e" },
-	{ mime = "application/epub+zip", fg = "#c5cc43" },
-	{ mime = "application/x-mobipocket-ebook", fg = "#c5cc43" },
+	{ mime = "application/epub+zip", fg = "#8bca4b" },
+	{ mime = "application/x-mobipocket-ebook", fg = "#8bca4b" },
 
 	# Fallback
 	{ name = "*", fg = "#c5bf98" },
@@ -639,7 +642,7 @@ exts = [
 	{ name = "mint", text = "󰌪", fg = "#87c095" },
 	{ name = "mjs", text = "", fg = "#f1e05a" },
 	{ name = "mk", text = "", fg = "#6d8086" },
-	{ name = "mkv", text = "󱜅", fg = "#75c643" },
+	{ name = "mkv", text = "󱜅", fg = "#8ed449" },
 	{ name = "ml", text = "", fg = "#e37933" },
 	{ name = "mli", text = "", fg = "#e37933" },
 	{ name = "mm", text = "", fg = "#519aba" },
@@ -648,7 +651,7 @@ exts = [
 	{ name = "mojo", text = "", fg = "#ff4c1f" },
 	{ name = "mov", text = "", fg = "#fd971f" },
 	{ name = "mp3", text = "", fg = "#00afff" },
-	{ name = "mp4", text = "󱜅", fg = "#75c643" },
+	{ name = "mp4", text = "󱜅", fg = "#8ed449" },
 	{ name = "mpp", text = "", fg = "#519aba" },
 	{ name = "msf", text = "", fg = "#137be1" },
 	{ name = "mts", text = "", fg = "#519aba" },

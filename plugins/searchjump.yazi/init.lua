@@ -9936,7 +9936,7 @@ local CH_TABLE = {
 }
 
 
-local KEYS_LABLE = {
+local KEYS_label = {
 	"j", "f", "d", "k", "l", "h", "g", "a", "s", "o", "i", "e", "u", "n", "c", "m", "r","p", "b", "t", "w", "v", "x", "y", "q", "z",
 	"I", "J","L","H", "A", "B", "Y", "D", "E", "F", "G",  "Q","R", "T", 
 	"U", "V", "W", "X", "Z", "C","K",  "M", "N", "O", "P","S", 
@@ -10093,7 +10093,7 @@ local function get_match_position(name, find_str)
 	end
 end
 
-local get_first_match_lable = ya.sync(function(state)
+local get_first_match_label = ya.sync(function(state)
 	if state.match == nil then
 		return nil
 	end
@@ -10106,7 +10106,7 @@ local get_first_match_lable = ya.sync(function(state)
 end)
 
 -- apply search result to show
-local set_match_lable = ya.sync(function(state, url, name, file)
+local set_match_label = ya.sync(function(state, url, name, file)
 	local span = {}
 	local key = {}
 	local i = 1
@@ -10123,13 +10123,11 @@ local set_match_lable = ya.sync(function(state, url, name, file)
 		table.insert(span, ui.Span(name:sub(1, startPos[1] - 1)):fg(state.opt_unmatch_fg))
 	end
 
-	local first_match_lable = get_first_match_lable()
-
 	while i <= #startPos do
 
 		table.insert(span, ui.Span(name:sub(startPos[i], endPos[i])):fg(state.opt_match_str_fg):bg(state.opt_match_str_bg))
 		if i <= #key then
-			table.insert(span, ui.Span(key[i]):fg(state.opt_lable_fg):bg(state.opt_lable_bg))
+			table.insert(span, ui.Span(key[i]):fg(state.opt_label_fg):bg(state.opt_label_bg))
 		end
 		if i + 1 <= #startPos then
 			if file:is_hovered() then
@@ -10200,19 +10198,19 @@ local record_match_file = ya.sync(function(state, patterns)
 		end
 	end	
 
-	-- get valid key list (KEYS_LABLE but exclude state.next_char table)
-	local valid_lable = {}
-	for _, value in ipairs(KEYS_LABLE) do
+	-- get valid key list (KEYS_label but exclude state.next_char table)
+	local valid_label = {}
+	for _, value in ipairs(KEYS_label) do
 
-		if not state.opt_enable_capital_lable and string.byte(value) > 64 and string.byte(value) < 91 then
-			goto nextlable
+		if not state.opt_enable_capital_label and string.byte(value) > 64 and string.byte(value) < 91 then
+			goto nextlabel
 		end  
 
 		if state.next_char[string.lower(value)] == nil then
-			table.insert(valid_lable, value)
+			table.insert(valid_label, value)
 		end
 
-		::nextlable::
+		::nextlabel::
 	end
 
 	-- assign valid key to each match file
@@ -10222,7 +10220,7 @@ local record_match_file = ya.sync(function(state, patterns)
 		exist_match = true
 		j = 1
 		while j <= #state.match[url].startPos do -- some file may match multi position
-			table.insert(state.match[url].key, valid_lable[i])
+			table.insert(state.match[url].key, valid_label[i])
 			i = i + 1
 			j = j + 1
 		end
@@ -10259,7 +10257,7 @@ local toggle_ui = ya.sync(function(st)
 		local url = tostring(file.url)
 
 		if st.match and st.match[url] then
-			spans = set_match_lable(url, name, file)
+			spans = set_match_label(url, name, file)
 		elseif file:is_hovered() then
 			spans = { ui.Span(name) }
 		else
@@ -10283,7 +10281,7 @@ local toggle_ui = ya.sync(function(st)
 	end
 end)
 
-local check_key_is_lable = ya.sync(function(state,final_input_str) 
+local check_key_is_label = ya.sync(function(state,final_input_str) 
 	if state.backouting then
 		state.backouting = false
 		return nil
@@ -10306,8 +10304,8 @@ end)
 
 local set_target_str = ya.sync(function(state, patterns, final_input_str)
 
-	local url = check_key_is_lable(final_input_str)
-	if url then -- if the last str match is a lable key, not a searchchar,toggle jump action
+	local url = check_key_is_label(final_input_str)
+	if url then -- if the last str match is a label key, not a searchchar,toggle jump action
 		if not state.args_autocd and  state.match[url].pane == "current" then-- if target file in current pane, use `arrow` instead of`reveal` tosupport select mode
 			local folder = cx.active.current
 			ya.manager_emit("arrow",{ state.match[url].cursorPos - folder.cursor - 1 + folder.offset})
@@ -10360,11 +10358,11 @@ local set_opts_default = ya.sync(function(state)
 	if (state.opt_first_match_str_bg == nil) then
 		state.opt_first_match_str_bg = "#73AC3A"
 	end
-	if (state.opt_lable_fg == nil) then
-		state.opt_lable_fg = "#EADFC8"
+	if (state.opt_label_fg == nil) then
+		state.opt_label_fg = "#EADFC8"
 	end
-	if (state.opt_lable_bg == nil) then
-		state.opt_lable_bg = "#BA603D"
+	if (state.opt_label_bg == nil) then
+		state.opt_label_bg = "#BA603D"
 	end
 	if (state.opt_only_current == nil) then
 		state.opt_only_current = false
@@ -10378,8 +10376,8 @@ local set_opts_default = ya.sync(function(state)
 	if (state.opt_auto_exit_when_unmatch == nil) then
 		state.opt_auto_exit_when_unmatch = true
 	end	
-	if (state.opt_enable_capital_lable == nil) then
-		state.opt_enable_capital_lable = false
+	if (state.opt_enable_capital_label == nil) then
+		state.opt_enable_capital_label = false
 	end	
 	return state.opt_search_patterns
 end)
@@ -10430,11 +10428,11 @@ return {
 		if (opts ~= nil and opts.first_match_str_bg ~= nil) then
 			state.opt_first_match_str_bg = opts.first_match_str_bg
 		end
-		if (opts ~= nil and opts.lable_fg ~= nil) then
-			state.opt_lable_fg = opts.lable_fg
+		if (opts ~= nil and opts.label_fg ~= nil) then
+			state.opt_label_fg = opts.label_fg
 		end
-		if (opts ~= nil and opts.lable_bg ~= nil) then
-			state.opt_lable_bg = opts.lable_bg
+		if (opts ~= nil and opts.label_bg ~= nil) then
+			state.opt_label_bg = opts.label_bg
 		end
 
 		if (opts ~= nil and opts.only_current ~= nil) then
@@ -10449,8 +10447,8 @@ return {
 		if (opts ~= nil and opts.auto_exit_when_unmatch ~= nil) then
 			state.opt_auto_exit_when_unmatch = opts.auto_exit_when_unmatch
 		end
-		if (opts ~= nil and opts.enable_capital_lable ~= nil) then
-			state.opt_enable_capital_lable = opts.enable_capital_lable
+		if (opts ~= nil and opts.enable_capital_label ~= nil) then
+			state.opt_enable_capital_label = opts.enable_capital_label
 		end
 	end,
 
@@ -10475,7 +10473,7 @@ return {
 			end
 
 			if INPUT_KEY[cand] == "<Enter>" then
-				final_input_str = get_first_match_lable()
+				final_input_str = get_first_match_label()
 				patterns = ""
 			elseif INPUT_KEY[cand] == "<Space>" then
 				final_input_str = ""
