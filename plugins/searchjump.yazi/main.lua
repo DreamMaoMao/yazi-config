@@ -10023,7 +10023,6 @@ local function get_match_position(name, find_str)
 		for utf8_char in string.gmatch(name, "[%z\1-\127\194-\244][\128-\191]*") do
 			table.insert(wide_char_name, utf8_char)
 		end
-
 		-- wide_char_name is the array of the multi-width character
 		-- after combining the elements of the array
 		-- so the real_index should be added 3 (Chinese)
@@ -10063,15 +10062,18 @@ local function get_match_position(name, find_str)
 				end
                 -- match failed, reset match begin index to the next char
                 -- of the first match char
+                real_index = real_index + (is_ch_char and 3 or 1)
 			elseif real_start_pos ~= 0 and not is_match_char then
 				i = 1
 				j = wide_char_match_begin
+                real_index = real_start_pos + (wide_char_name[wide_char_match_begin]:byte() > 127 and 3 or 1)
 				real_start_pos = 0
 				wide_char_match_begin = 0
+            else
+                real_index = real_index + (is_ch_char and 3 or 1)
 			end
 
             -- update real_index
-            real_index = real_index + (is_ch_char and 3 or 1)
 			j = j + 1
 		end				
     else -- re match mode

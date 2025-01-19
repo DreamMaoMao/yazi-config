@@ -16,12 +16,13 @@ keymap = [
 	{ on = [ "<A-j>" ],  run = "plugin arrow-parent --args=1",  desc = "arrow parent down" },
 	{ on = [ "U" ], run = "plugin cd-last", desc = "cd last path" },
 
-	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Save current position as a bookmark" },
-	{ on = [ "u","m" ], run = "plugin bookmarks --args='modify'", desc = "modify key bind to current position" },
+	{ on = [ "u","a" ], run = "plugin bookmarks --args='save'", desc = "Add hovered as bookmark" },
+	{ on = [ "u","m" ], run = "plugin bookmarks --args='modify'", desc = "modify a bookmarks key to hovered" },
 	{ on = [ "u","g" ], run = "plugin bookmarks --args='jump'", desc = "Jump to a bookmark" },
 	{ on = [ "u","d" ], run = "plugin bookmarks --args='delete'", desc = "Delete a bookmark" },
 	{ on = [ "u","D" ],	run = "plugin bookmarks --args='delete_all'", desc = "Delete all bookmarks" },
 	{ on = [ "u","l"], run = "plugin lastopen --args='jump'",         desc = "jump to last open file" },
+	{ on = [ "u","n"], run = "plugin mount",         desc = "mount manager" },
 
 	{ on = [ "I" ], run = "plugin keyjump --args='global'", desc = "keyjump" },
 	{ on = [ "i" ], run = "plugin easyjump --args=''", desc = "easyjump" },
