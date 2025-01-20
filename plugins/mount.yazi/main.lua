@@ -15,7 +15,15 @@ end)
 
 local update_partitions = ya.sync(function(self, partitions)
 	self.partitions = partitions
+	self.title = "Mount"
+	self.title_color = "#82ab3a"
 	self.cursor = math.max(0, math.min(self.cursor or 0, #self.partitions - 1))
+	ya.render()
+end)
+
+local set_pending_status = ya.sync(function(self)
+	self.title_color = "#d9734b"
+	self.title = "Pending..."
 	ya.render()
 end)
 
@@ -34,17 +42,25 @@ local M = {
 	keys = {
 		{ on = "q", run = "quit" },
 		{ on = "<Esc>", run = "quit" },
+		{ on = "<Enter>", run = "cd_quit" },
+		{ on = "<Space>", run = "toggle" },
 
 		{ on = "k", run = "up" },
 		{ on = "j", run = "down" },
-		-- { on = "l", run = "right" },
+		{ on = "K", run = "4up" },
+		{ on = "J", run = "4down" },
+		{ on = "l", run = "right" },
+		{ on = "h", run = "left" },
 
 		{ on = "<Up>", run = "up" },
 		{ on = "<Down>", run = "down" },
-		-- { on = "<Right>", run = "right" },
+		{ on = "<S-Up>", run = "4up" },
+		{ on = "<S-Down>", run = "4down" },
+		{ on = "<Left>", run = "left" },
 
 		{ on = "m", run = "mount" },
 		{ on = "u", run = "unmount" },
+		{ on = "M", run = "unmount" },
 		{ on = "e", run = "eject" },
 	},
 }
@@ -91,8 +107,7 @@ function M:entry(job)
 			local cand = self.keys[ya.which { cands = self.keys, silent = true }]
 			if cand then
 				tx1:send(cand.run)
-				if cand.run == "quit" then
-					toggle_ui()
+				if cand.run == "quit" or cand.run == "cd_quit" then
 					break
 				end
 			end
@@ -104,16 +119,31 @@ function M:entry(job)
 			local run = rx1:recv()
 			if run == "quit" then
 				tx2:send(run)
+				toggle_ui()
+				break
+			elseif run == "cd_quit" then
+				local active = active_partition()
+				if active and active.dist then
+					ya.manager_emit("cd", { active.dist })
+				end
+				tx2:send(run)
+				toggle_ui()
 				break
 			elseif run == "up" then
 				update_cursor(-1)
 			elseif run == "down" then
 				update_cursor(1)
+			elseif run == "4up" then
+				update_cursor(-4)
+			elseif run == "4down" then
+				update_cursor(4)
 			elseif run == "right" then
 				local active = active_partition()
 				if active and active.dist then
 					ya.manager_emit("cd", { active.dist })
 				end
+			elseif run == "left" then
+				ya.manager_emit("leave", {})
 			else
 				tx2:send(run)
 			end
@@ -125,6 +155,18 @@ function M:entry(job)
 			local run = rx2:recv()
 			if run == "quit" then
 				break
+			elseif run == "cd_quit" then
+				break
+			elseif run == "toggle" then
+				local active = active_partition()
+
+				if active and active.dist then
+					set_pending_status()
+					self.operate("unmount")
+				elseif active and not active.dist then
+					set_pending_status()
+					self.operate("mount")
+				end				
 			elseif run == "mount" then
 				self.operate("mount")
 			elseif run == "unmount" then
@@ -142,13 +184,12 @@ function M:reflow() return { self } end
 
 function M:redraw()
 	local rows = {}
-	local exit_main = {}
 	for _, p in ipairs(self.partitions or {}) do
-		if p.sub == "" and p.fstype == nil and p.dist == nil and not exit_main[p.main] then
-			exit_main[p.main] = true
+		if p.sub == "" and p.fstype == nil and p.dist == nil then
 			rows[#rows + 1] = ui.Row { p.main }
 		else
-			rows[#rows + 1] = ui.Row { p.sub, p.label or "", p.dist or "", p.fstype or "" }
+
+			rows[#rows + 1] = ui.Row { p.dist and (p.sub.." *") or (p.sub), p.label or "", p.dist or "", p.fstype or "" }
 		end
 	end
 
@@ -158,7 +199,7 @@ function M:redraw()
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
 			:style(ui.Style():fg("#82ab3a"))
-			:title(ui.Line("Mount"):align(ui.Line.CENTER)),
+			:title(ui.Line(self.title):align(ui.Line.CENTER):fg(self.title_color)),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Src", "Label", "Dist", "FSType" }):style(ui.Style():bold()))
@@ -198,7 +239,7 @@ local function parse_lsblk()
     -- Helper function to parse command output into a table
     local function parse_output(output, table)
         for line in output:gmatch("[^\r\n]+") do
-            local name, type, value = line:match("(%S+)%s+(%S+)%s*(%S*)")
+            local name, type, value = line:match("(%S+)%s+(%S+)%s+(%S+.*)")
             if name and type then
                 table[name] = value ~= "" and value or nil
             end
@@ -281,6 +322,7 @@ function M.operate(type)
 	if not active then
 		return
 	elseif active.sub == "" then
+		ya.manager_emit("plugin", {"mount", args = "refresh" })
 		return -- TODO: mount/unmount main disk
 	end
 
