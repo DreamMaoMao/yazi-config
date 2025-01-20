@@ -346,7 +346,10 @@ function M.operate(type)
 	end
 end
 
-function M.fail(s, ...) ya.notify { title = "Mount", content = string.format(s, ...), timeout = 10, level = "error" } end
+function M.fail(s, ...) 
+	ya.manager_emit("plugin", {"mount", args = "refresh" })
+	ya.notify { title = "Mount", content = string.format(s, ...), timeout = 10, level = "error" } 
+end
 
 function M:click() end
 
