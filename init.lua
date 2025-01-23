@@ -56,6 +56,11 @@ require("header-host"):setup({
 })
 
 
+require("fg"):setup({
+    default_action = "menu", -- nvim, jump
+})
+
+
 require("cd-last"):setup()
 
 

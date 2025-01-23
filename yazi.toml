@@ -14,7 +14,7 @@ tab_size        = 2
 max_width       = 600
 max_height      = 900
 cache_dir       = ""
-image_delay     = 0
+image_delay     = 30
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
@@ -23,8 +23,6 @@ folder = [
 	{ run = 'nvim "$1"', block = true,desc = "neovim", for = "linux" },
 	{ run = '''fish -c "lazygit -p "$1""''', block = true,desc = "lazygit", for = "linux" },
 	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
-	{ run = 'konsole --workdir "$@"',orphan = true, desc = "konsole" , for = "linux" },
-	# { run = '''konsole -e "nvim  "$@"" ''',orphan = true, desc = "neovim" , for = "linux" },
 	{ run = 'basename "$@" | xargs -I {} tar --use-compress-program=pigz -cf ~/down/{}.tar.gz {}',orphan = true, desc = "archive" , for = "linux"  },
 	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo" , for = "linux" },
 
@@ -43,7 +41,6 @@ text = [
 	{ run = 'gedit "$@" ', block = true, orphan = true, desc = "gedit"  , for = "linux"},
 	# { run = 'nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
 	{ run = 'zathura "$@"',orphan = true, desc = "zathura"  , for = "linux" },
-	# { run = '''konsole -e "nvim  "$@"" ''',orphan = true, desc = "neovim" , for = "linux" },
 ]
 image = [
 	{ run = 'eog  "$@"',  orphan = true, desc = "eog" , for = "linux"},
@@ -68,7 +65,6 @@ document = [
 fallback = [
 	{ run = 'xdg-open "$@"', orphan = true, desc = "xdg-open" , for = "linux" },
 	{ run = 'GDK_BACKEND=x11 nemo "$@"', orphan = true, desc = "nemo" , for = "linux" },	
-	{ run = 'konsole --workdir "$@"',orphan = true, desc = "konsole" , for = "linux" },
 ]
 
 [open]

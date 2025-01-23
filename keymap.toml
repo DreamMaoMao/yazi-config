@@ -241,6 +241,8 @@ keymap = [
 	{ on = [ "$" ], run = "move 999",                        desc = "Move to the EOL" },
 	{ on = [ "I" ], run = [ "move -999", "insert" ],         desc = "Move to the BOL, and enter insert mode" },
 	{ on = [ "A" ], run = [ "move 999", "insert --append" ], desc = "Move to the EOL, and enter append mode" },
+	{ on = [ "<C-a>" ], run = "move -999",                       desc = "Move to the BOL" },
+	{ on = [ "<C-e>" ], run = "move 999",                       desc = "Move to the EOL" },
 
 	{ on = [ "<Left>" ],  run = "move -1", desc = "Move cursor left" },
 	{ on = [ "<Right>" ], run = "move 1",  desc = "Move cursor right" },
