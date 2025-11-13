@@ -746,7 +746,6 @@ local ext_mime_map = {
 	["link66"] = "application/vnd.route66.link66+xml",
 	["st"] = "application/vnd.sailingtracker.track",
 	["SAR"] = "application/vnd.sar",
-	["scd"] = "application/vnd.scribus",
 	["sla"] = "application/vnd.scribus",
 	["slaz"] = "application/vnd.scribus",
 	["s3df"] = "application/vnd.sealed.3df",
@@ -1209,7 +1208,6 @@ local ext_mime_map = {
 	["uric"] = "text/vnd.si.uricatalogue",
 	["jad"] = "text/vnd.sun.j2me.app-descriptor",
 	["sos"] = "text/vnd.sosi",
-	["ts"] = "application/octet-stream",
 	["si"] = "text/vnd.wap.si",
 	["sl"] = "text/vnd.wap.sl",
 	["wml"] = "text/vnd.wap.wml",
@@ -1360,7 +1358,6 @@ local ext_mime_map = {
 	["axa"] = "audio/x-annodex",
 	["flac"] = "audio/x-flac",
 	["mka"] = "audio/x-matroska",
-	["mod"] = "audio/x-mod",
 	["ult"] = "audio/x-mod",
 	["uni"] = "audio/x-mod",
 	["m15"] = "audio/x-mod",
@@ -1419,9 +1416,9 @@ local function match_mimetype(s)
 end
 
 local flush = ya.sync(function (state,mimes)
-	ya.manager_emit("update_mimes", { updates = mimes })
-	ya.manager_emit("update_mimetype", { updates = mimes }) -- TODO: remove this
-	ya.manager_emit("peek", { force = true })
+	ya.mgr_emit("update_mimes", { updates = mimes })
+	ya.mgr_emit("update_mimetype", { updates = mimes }) -- TODO: remove this
+	ya.mgr_emit("peek", { force = true })
 end)
 
 local get_data = ya.sync(function (state)
@@ -1461,7 +1458,7 @@ local M = {
 		local function Status_mime(self)
 			local url = cx.active.current.hovered and tostring(cx.active.current.hovered.url) or ""
 			if cx.active.preview.folder and #cx.active.preview.folder.window > 0 and st.task and st.task == url then
-				ya.manager_emit("plugin", { "mime-preview", args = ya.quote(tostring(""))})	
+				ya.mgr_emit("plugin", { "mime-preview", ya.quote(tostring(""))})	
 				st.task =  nil
 			end
 			if st.url ~= url then

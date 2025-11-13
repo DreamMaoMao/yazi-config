@@ -14,17 +14,17 @@ tab_size        = 2
 max_width       = 600
 max_height      = 900
 cache_dir       = ""
-image_delay     = 30
+image_delay     = 20
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
 [opener]
 folder = [
 	{ run = 'nvim "$1"', block = true,desc = "neovim", for = "linux" },
-	{ run = '''fish -c "lazygit -p "$1""''', block = true,desc = "lazygit", for = "linux" },
 	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
+	{ run = 'zeditor  "$@"',orphan = true, desc = "zed" , for = "linux" },
+	{ run = '''fish -c "lazygit -p "$1""''', block = true,desc = "lazygit", for = "linux" },
 	{ run = 'basename "$@" | xargs -I {} tar --use-compress-program=pigz -cf ~/down/{}.tar.gz {}',orphan = true, desc = "archive" , for = "linux"  },
-	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo" , for = "linux" },
 
 ]
 archive = [
@@ -38,17 +38,15 @@ archive = [
 text = [
 	{ run = 'nvim "$1"', block = true,desc = "neovim", for = "linux" },
 	{ run = 'code  "$@"',orphan = true, desc = "vscode" , for = "linux" },
-	{ run = 'gedit "$@" ', block = true, orphan = true, desc = "gedit"  , for = "linux"},
-	# { run = 'nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
-	{ run = 'zathura "$@"',orphan = true, desc = "zathura"  , for = "linux" },
+	{ run = 'zeditor  "$@"',orphan = true, desc = "zed" , for = "linux" },
 ]
 image = [
-	{ run = 'eog  "$@"',  orphan = true, desc = "eog" , for = "linux"},
-	{ run = 'feh "$@"',  orphan = true, desc = "feh" , for = "linux"},
+	{ run = 'sxiv -a "$@"',  orphan = true, desc = "sxiv" , for = "linux"},
+	{ run = 'mirage  "$@"',  orphan = true, desc = "mirage" , for = "linux"},
 ]
 video = [
 	{ run = 'mpv "$@" ', orphan = true, desc = "mpv" , for = "linux" },
-	{ run = 'GDK_BACKEND=x11 nemo "$@"',orphan = true, desc = "nemo"  , for = "linux" },
+	{ run = 'ffmpeg -i "$@" -vf "fps=10" -loop 0 "$@".gif', orphan = true, desc = "change to gif"  , for = "linux" },	
 
 ]
 audio = [
@@ -57,14 +55,12 @@ audio = [
 
 document = [
 	{ run = 'xdg-open "$@"', orphan = true, desc = "xdg-open" , for = "linux" },
-	{ run = 'zathura "$@" ' , orphan = true, desc = "zathura" , for = "linux"},
-	{ run = 'evince "$@" ' , orphan = true, desc = "evince" , for = "linux"},
+	{ run = 'okular "$@" ' , orphan = true, desc = "okular" , for = "linux"},
 	{ run = 'GTK_IM_MODULE=fcitx5 foliate "$@" ' , orphan = true, desc = "foliate" , for = "linux"},
 ]
 
 fallback = [
 	{ run = 'xdg-open "$@"', orphan = true, desc = "xdg-open" , for = "linux" },
-	{ run = 'GDK_BACKEND=x11 nemo "$@"', orphan = true, desc = "nemo" , for = "linux" },	
 ]
 
 [open]
@@ -111,17 +107,17 @@ prepend_previewers = [
   { mime= "application/octet-stream", run = "video"}
 ]
 
-prepend_preloaders= [
-	# { mime = "image/{avif,hei?,jxl,svg+xml}", run = "disable" },
-	# { mime = "image/*", run = "disable" },
-	# Video
-	{ mime = "video/*", run = "disable" },
-	# PDF
-	# { mime = "application/pdf", run = "disable" },
-	# Font
-	{ mime = "font/*", run = "disable" },
-	{ mime = "application/vnd.ms-opentype", run = "disable" },
-]
+# prepend_preloaders= [
+# 	# { mime = "image/{avif,hei?,jxl,svg+xml}", run = "disable" },
+# 	{ mime = "image/*", run = "disable" },
+# 	# Video
+# 	{ mime = "video/*", run = "disable" },
+# 	# PDF
+# 	# { mime = "application/pdf", run = "disable" },
+# 	# Font
+# 	{ mime = "font/*", run = "disable" },
+# 	{ mime = "application/vnd.ms-opentype", run = "disable" },
+# ]
 
 [[plugin.prepend_fetchers]]
 id   = "mime"
@@ -151,13 +147,3 @@ id   = "current-size"
 name = "*/"
 run  = "current-size"
 
-
-# fetchers = [
-# 	# Mimetype
-# 	{ id = "mime-ext", name = "*", run = "mime-ext", prio = "high" },
-# 	{ id = "git", name = "*", run = "git", prio = "normal" },
-# 	{ id = "git", name = "*/", run = "git", prio = "normal" },
-# 	{ id = "current-size", name = "*/", run = "current-size", prio = "normal" },
-# 	{ id = "current-size", name = "*", run = "current-size",prio = "normal" },
-# ]
-#

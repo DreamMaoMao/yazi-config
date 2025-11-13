@@ -9,7 +9,7 @@ local toggle_ui = ya.sync(function(self)
 end)
 
 local init_ui_data = ya.sync(function(self,file_url)
-	self.opt = {"nvim", "jump"}
+	self.opt = {"nvim", "helix", "jump"}
 	self.title = "fg"
 	self.title_color = "#82ab3a"
 	self.cursor = 0
@@ -34,7 +34,9 @@ local get_default_action = ya.sync(function(self)
 end)
 
 local update_cursor = ya.sync(function(self, cursor)
-	self.cursor = ya.clamp(0, self.cursor + cursor,  1)
+	-- if add opt, need to add change 3th arg.
+	-- forexample, 2 mean 3 opt. circle 0 to 2.
+	self.cursor = ya.clamp(0, self.cursor + cursor,  2)
 	ya.render()
 end)
 
@@ -187,68 +189,48 @@ function M:entry(job)
 		return fail("`fzf` exited with error code %s", output.status.code)
 	end
 
+	if output.stdout == "" then
+		return
+	end
+
 	local target = output.stdout:gsub("\n$", "")
 
     local file_url = splitAndGetNth(target,":",1)
 	local line_number = splitAndGetNth(target,":",2)
+	line_number = line_number and line_number or 1
 	init_ui_data(cwd.."/"..file_url)
+	local default_action = get_default_action()
 
-	local tx1, rx1 = ya.chan("mpsc")
-	local tx2, rx2 = ya.chan("mpsc")
-	function producer()
+	if (default_action == "menu" or default_action == nil) and args[1] ~= "fzf" then
+		_permit:drop()
+		toggle_ui()
 		while true do
 			local cand = self.keys[ya.which { cands = self.keys, silent = true }]
 			if cand then
-				tx1:send(cand.run)
-				if cand.run == "quit" or cand.run == "select" then
+				if cand.run == "quit" then
+					set_option(false)
+					toggle_ui()
 					break
+				elseif cand.run == "select" then
+					set_option(true)
+					toggle_ui()
+					break
+				elseif cand.run == "down" then
+					update_cursor(1)
+				elseif cand.run == "up" then
+					update_cursor(-1)
 				end
 			end
 		end
-	end
-	function consumer1()
-		repeat
-			local run = rx1:recv()
-			if run == "quit" or run == "select" then
-				tx2:send(run)
-				toggle_ui()
-				_permit = ya.hide()
-				break
-			elseif run == "up" then
-				update_cursor(-1)
-			elseif run == "down" then
-				update_cursor(1)
-			else
-				tx2:send(run)
-			end
-		until not run
+		_permit = ya.hide()
 	end
 
-	function consumer2()
-		repeat
-			local run = rx2:recv()
-			if run == "quit" then
-				set_option(false)
-				break
-			elseif run == "select" then
-				set_option(true)
-				break
-			end
-		until not run
-	end
-
-	local default_action = get_default_action()
-
-	if default_action == "menu" or default_action == nil then
-		_permit:drop()
-		toggle_ui()
-		ya.join(producer, consumer1, consumer2)
-	end
-
-	if default_action == "nvim" or get_option() == "nvim" then
-		os.execute("nvim +"..line_number.." -n "..file_url.." 2> /dev/null")
-	elseif (default_action == "jump" or get_option() == "jump") and file_url ~= ""  then
-		ya.manager_emit(file_url:match("[/\\]$") and "cd" or "reveal", { file_url })
+	if (default_action == "nvim" or get_option() == "nvim" ) and args[1] ~= "fzf" then
+		os.execute("nvim +"..line_number.." -n "..file_url)
+	elseif (default_action == "helix" or get_option() == "helix" ) and args[1] ~= "fzf" then
+		os.execute("hx +"..line_number.." "..file_url)
+	elseif (default_action == "jump" or get_option() == "jump" or args[1] == "fzf") and file_url ~= ""  then
+		ya.mgr_emit(file_url:match("[/\\]$") and "cd" or "reveal", { file_url })
 	else
 		return
 	end
@@ -261,7 +243,8 @@ function M:redraw()
 	local rows = {}
 
 	rows[1] = ui.Row { "open with nvim" }
-	rows[2] = ui.Row { "reach at yazi" }
+	rows[2] = ui.Row { "open with helix" }
+	rows[3] = ui.Row { "reach at yazi" }
 	return {
 		ui.Clear(self._area),
 		ui.Border(ui.Border.ALL)
@@ -278,9 +261,9 @@ function M:redraw()
 end
 
 
-function M.fail(s, ...) 
-	ya.manager_emit("plugin", {"mount", args = "refresh" })
-	ya.notify { title = "fg", content = string.format(s, ...), timeout = 10, level = "error" } 
+function M.fail(s, ...)
+	ya.mgr_emit("plugin", {"mount", "refresh" })
+	ya.notify { title = "fg", content = string.format(s, ...), timeout = 10, level = "error" }
 end
 
 function M:click() end
