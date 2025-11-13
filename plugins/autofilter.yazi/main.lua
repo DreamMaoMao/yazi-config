@@ -298,7 +298,7 @@ return {
 		
 	  		local i = 1
 	  		local mime
-	  		local output = command:args(unmatch_ext_urls):output()
+	  		local output = command:arg(unmatch_ext_urls):output()
 	  		for line in output.stdout:gmatch("[^\r\n]+") do
 				if i > #unmatch_ext_urls then
 				  break
@@ -326,7 +326,7 @@ return {
 			local value, event = ya.input({
 				realtime = false,
 				title = "set autofilter word:",
-				position = { "top-center", y = 3, w = 40 },
+				pos = { "top-center", y = 3, w = 40 },
 			})
 			if event == 1 then
 				save_autofilter(value)

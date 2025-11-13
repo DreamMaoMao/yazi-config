@@ -1,4 +1,4 @@
-[manager]
+[mgr]
 
 keymap = [
 
@@ -23,7 +23,7 @@ keymap = [
 	{ on = [ "u","l"], run = "plugin lastopen -- jump",         desc = "jump to last open file" },
 	{ on = [ "u","n"], run = "plugin mount",         desc = "mount manager" },
 
-	{ on = [ "I" ], run = "plugin keyjump -- global once", desc = "keyjump" },
+	{ on = [ "I" ], run = "plugin keyjump -- global", desc = "keyjump" },
 	{ on = [ "i" ], run = "plugin easyjump", desc = "easyjump" },
 	{ on = [ "s" ], run = "plugin searchjump", desc = "searchjump" },
 
@@ -315,13 +315,13 @@ keymap = [
 ]
 
 
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on  = [ "c","l" ]
 run = [ "plugin clipboard" ]
 desc = "clip to clipboard"
 
 
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["u", "u"]
 run  = "plugin sxiv-easymotion"
 desc = "Preview images in sxiv"
