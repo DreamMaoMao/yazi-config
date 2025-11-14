@@ -199,7 +199,7 @@ function M:redraw()
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
 			:style(ui.Style():fg("#82ab3a"))
-			:title(ui.Line("Mount"):align(ui.Align.CENTER):fg(self.title_color and self.title_color or "#82ab3a")),
+			:title(ui.Line(self.title):align(ui.Align.CENTER):fg(self.title_color and self.title_color or "#82ab3a")),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Src", "Label", "Dist", "FSType" }):style(ui.Style():bold()))
