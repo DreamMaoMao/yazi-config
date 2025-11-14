@@ -67,7 +67,7 @@ fallback = [
 
 [open]
 rules = [
-	{ name = "*/", use = ["folder"] },
+	{ url = "*/", use = ["folder"] },
 
 	{ mime = "text/*", use = ["text"] },
 	{ mime = "image/*", use = ["image"] },
@@ -102,38 +102,38 @@ enabled = false
 [[plugin.prepend_fetchers]]
 id   = "mime"
 if   = "!(mime|dummy)"
-name = "*"
+url = "*/"
 run  = "mime-ext"
 prio = "high"
 
 [[plugin.prepend_fetchers]]
 id   = "git"
-name = "*"
+url = "*"
 run  = "git"
 
 [[plugin.prepend_fetchers]]
 id   = "git"
-name = "*/"
+url = "*/"
 run  = "git"
 
 
 [[plugin.prepend_fetchers]]
 id   = "current-size"
-name = "*"
+url = "*"
 run  = "current-size"
 
 [[plugin.prepend_fetchers]]
 id   = "current-size"
-name = "*/"
+url = "*/"
 run  = "current-size"
 
 
 [[plugin.prepend_previewers]]
-name = "*.md"
+url = "*.md"
 run  = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
 
 [[plugin.prepend_previewers]]
-name = "*.html"
+url = "*.html"
 run  = 'piper -- w3m -I UTF-8 -T text/html "$1"'
 
 [[plugin.prepend_previewers]]
@@ -149,6 +149,6 @@ mime = "application/octet-stream"
 run  = "video"
 
 [[plugin.prepend_previewers]]
-name = "*.csv"
+url = "*.csv"
 run  = 'piper -- bat -p --color=always "$1"'
 
