@@ -4,7 +4,7 @@ local function fail(s, ...) ya.notify { title = "Fzf", content = string.format(s
 
 local function entry(_, job)
 	local args = job.args
-	local _permit = ui.hide()
+	local _permit = ya.hide()
 	local cwd = tostring(state())
 	local cmd = args[1]
 

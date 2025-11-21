@@ -11,13 +11,13 @@ end
 local save = ya.sync(function(st, cwd,folder_size)
 	if cx.active.current.cwd == Url(cwd) then
 		st.folder_size = folder_size
-		ui.render()
+		ya.render()
 	end
 end)
 
 local clear_state = ya.sync(function(st)
 	st.folder_size = ""
-	ui.render()
+	ya.render()
 end)
 
 local flush_empty_folder_status = ya.sync(function(st)
@@ -109,7 +109,7 @@ local M = {
 
 		local args = job.args
 		local folder_size = ""
-		output = Command("du"):arg({"-sh",args[1].."/"}):output()
+		output = Command("du"):args({"-sh",args[1].."/"}):output()
 
 		if output then
 			local split_output = string_split(output.stdout,"\t")

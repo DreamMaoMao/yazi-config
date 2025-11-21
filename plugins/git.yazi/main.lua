@@ -86,14 +86,14 @@ local save = ya.sync(function(st, git_branch,git_file_status,git_is_dirty,git_st
 	st.git_status_str = git_status_str
 	st.is_ignore_dir = is_ignore_dir
 	st.is_untracked_dir= is_untracked_dir
-	ui.render()
+	ya.render()
 end)
 
 local clear_state = ya.sync(function(st)
 	st.git_branch = ""
 	st.git_file_status = ""
 	st.git_is_dirty = ""
-	ui.render()
+	ya.render()
 end)
 
 local function update_git_status(path)
@@ -187,7 +187,7 @@ local M = {
 
 		local git_branch
 		local result, _ = Command("git")
-		:arg({ "symbolic-ref", "HEAD" })
+		:args({ "symbolic-ref", "HEAD" })
 		:stdout(Command.PIPED)
 		:output()
 
@@ -205,7 +205,7 @@ local M = {
 		local git_status_str = ""
 		local git_file_status = nil
 		local result, _ = Command("git")
-		:arg({ "--no-optional-locks","-c", "core.quotePath=", "status", "--ignored", "-s", "--ignore-submodules=dirty" })
+		:args({ "--no-optional-locks","-c", "core.quotePath=", "status", "--ignored", "-s", "--ignore-submodules=dirty" })
 		:stdout(Command.PIPED)
 		:output()
 

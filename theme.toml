@@ -2,7 +2,7 @@
 
 # : Manager {{{
 
-[mgr]
+[manager]
 cwd = { fg = "#cfc251" }
 
 # Hovered
@@ -38,15 +38,6 @@ syntect_theme = "~/.config/yazi/bat-theme/Gruvbox-N.tmTheme"
 # syntect_theme = "~/.config/yazi/bat-theme/Catppuccin-macchiato.tmTheme"
 
 # : }}}
-#
-
-[tabs]
-active   = { bg = "#AC9259",fg="#000000" }
-inactive = { fg = "#CAAA75", bg = "#201B14" }
-sep_inner = { open = "", close = "" }
-sep_outer = { open = "", close = "" }
-#
-
 [mode]
 
 normal_main = { fg = "#000000", bg = "#A89984", bold = true }
@@ -85,8 +76,8 @@ path = { fg = "#8bca4b", bold = true }
 
 # : }}}
 [pick]
-border   = { fg = "#a2c45f" }
-active   = { fg = "#aed265", bold = true }
+border   = { fg = "#BABC2A" }
+active   = { fg = "#000000",bg = "#a7aa26" }
 inactive = {}
 
 
@@ -120,7 +111,7 @@ title_warn  = { fg = "#d3869b" }
 title_error = { fg = "#ea6962" }
 
 # Icons
-icon_info  = ""
+icon_info  = ""
 icon_warn  = ""
 icon_error = ""
 
