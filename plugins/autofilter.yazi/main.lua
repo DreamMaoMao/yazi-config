@@ -326,7 +326,7 @@ return {
 			local value, event = ya.input({
 				realtime = false,
 				title = "set autofilter word:",
-				pos = { "top-center", y = 3, w = 40 },
+				position = { "top-center", y = 3, w = 40 },
 			})
 			if event == 1 then
 				save_autofilter(value)

@@ -5,7 +5,7 @@ local toggle_ui = ya.sync(function(self)
 	else
 		self.children = Modal:children_add(self, 10)
 	end
-	ui.render()
+	ya.render()
 end)
 
 local subscribe = ya.sync(function(self)
@@ -18,13 +18,13 @@ local update_partitions = ya.sync(function(self, partitions)
 	self.title = "Mount"
 	self.title_color = "#82ab3a"
 	self.cursor = math.max(0, math.min(self.cursor or 0, #self.partitions - 1))
-	ui.render()
+	ya.render()
 end)
 
 local set_pending_status = ya.sync(function(self)
 	self.title_color = "#d9734b"
 	self.title = "Pending..."
-	ui.render()
+	ya.render()
 end)
 
 local active_partition = ya.sync(function(self) return self.partitions[self.cursor + 1] end)
@@ -35,7 +35,7 @@ local update_cursor = ya.sync(function(self, cursor)
 	else
 		self.cursor = ya.clamp(0, self.cursor + cursor, #self.partitions - 1)
 	end
-	ui.render()
+	ya.render()
 end)
 
 local M = {
@@ -195,11 +195,11 @@ function M:redraw()
 
 	return {
 		ui.Clear(self._area),
-		ui.Border(ui.Edge.ALL)
+		ui.Border(ui.Border.ALL)
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
 			:style(ui.Style():fg("#82ab3a"))
-			:title(ui.Line(self.title):align(ui.Align.CENTER):fg(self.title_color and self.title_color or "#82ab3a")),
+			:title(ui.Line(self.title):align(ui.Line.CENTER):fg(self.title_color)),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Src", "Label", "Dist", "FSType" }):style(ui.Style():bold()))

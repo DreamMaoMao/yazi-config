@@ -5,7 +5,7 @@ local toggle_ui = ya.sync(function(self)
 	else
 		self.children = Modal:children_add(self, 10)
 	end
-	ui.render()
+	ya.render()
 end)
 
 local init_ui_data = ya.sync(function(self,file_url)
@@ -14,7 +14,7 @@ local init_ui_data = ya.sync(function(self,file_url)
 	self.title_color = "#82ab3a"
 	self.cursor = 0
 	self.file_url = file_url and file_url or ""
-	ui.render()
+	ya.render()
 end)
 
 local set_option = ya.sync(function(self,enable)
@@ -37,7 +37,7 @@ local update_cursor = ya.sync(function(self, cursor)
 	-- if add opt, need to add change 3th arg.
 	-- forexample, 2 mean 3 opt. circle 0 to 2.
 	self.cursor = ya.clamp(0, self.cursor + cursor,  2)
-	ui.render()
+	ya.render()
 end)
 
 local M = {
@@ -112,7 +112,7 @@ local function fail(s, ...) ya.notify { title = "Fzf", content = string.format(s
 
 function M:entry(job)
 	local args = job.args
-	local _permit = ui.hide()
+	local _permit = ya.hide()
 	local cwd = state()
 	local shell_value = ya.target_family() == "windows" and "nu" or os.getenv("SHELL"):match(".*/(.*)")
 	local cmd_args = ""
@@ -222,7 +222,7 @@ function M:entry(job)
 				end
 			end
 		end
-		_permit = ui.hide()
+		_permit = ya.hide()
 	end
 
 	if (default_action == "nvim" or get_option() == "nvim" ) and args[1] ~= "fzf" then
@@ -247,11 +247,11 @@ function M:redraw()
 	rows[3] = ui.Row { "reach at yazi" }
 	return {
 		ui.Clear(self._area),
-		ui.Border(ui.Edge.ALL)
+		ui.Border(ui.Border.ALL)
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
 			:style(ui.Style():fg("#82ab3a"))
-			:title(ui.Line(self.title):align(ui.Align.CENTER):fg(self.title_color)),
+			:title(ui.Line(self.title):align(ui.Line.CENTER):fg(self.title_color)),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Action for:"..self.file_url }):style(ui.Style():bold():fg("#e73c80")))
