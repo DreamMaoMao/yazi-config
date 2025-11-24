@@ -847,6 +847,6 @@ conds = [
 
 	# Fallback
 	{ if = "dir", text = "󰝰" ,fg_dark = "#F7C030",fg_light = "#F7C030"},
-	{ if = "exec", text = "" ,fg_dark = "#a2c5d1", fg_light = "#3a4446"},
+	{ if = "exec", text = "" ,fg_dark = "#a2c5d1", fg_light = "#3a4446"},
 	{ if = "!dir", text = "" },
 ]
