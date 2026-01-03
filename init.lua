@@ -40,6 +40,13 @@ require("searchjump"):setup({
     search_patterns = ({ "hell[dk]d", "%d+.1080p", "第%d+集", "第%d+话", "%.E%d+", "S%d+E%d+", })
 })
 
+require("findch"):setup({
+    match_str_fg = "#000000",
+    match_str_bg = "#EB7459",
+    header_color = "#EB7459",
+    mapdata = require("sjch").data,
+})
+
 require("status-owner"):setup({
     color = "#d98a8a"
 })

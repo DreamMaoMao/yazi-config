@@ -179,6 +179,7 @@ enabled = false
 [plugin]
 prepend_previewers = [
   { name = "*.md", run = "glow" },
+  { name = "*.docx", run = "doxx" },
   { name = "*.html", run = "html" },
   { mime = "text/html", run = "html" },
   { mime = "application/epub+zip", run = "epub-preview" },
