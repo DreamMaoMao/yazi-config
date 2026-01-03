@@ -102,6 +102,13 @@ enabled = false
 [[plugin.prepend_fetchers]]
 id   = "mime"
 if   = "!(mime|dummy)"
+url = "*"
+run  = "mime-ext"
+prio = "high"
+
+[[plugin.prepend_fetchers]]
+id   = "mime"
+if   = "!(mime|dummy)"
 url = "*/"
 run  = "mime-ext"
 prio = "high"
@@ -133,16 +140,16 @@ url = "*.md"
 run  = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'
 
 [[plugin.prepend_previewers]]
+url = "*.docx"
+run  = 'piper -- CLICOLOR_FORCE=1 doxx --export ansi --image-width $w -w $w "$1"'
+
+[[plugin.prepend_previewers]]
 url = "*.html"
 run  = 'piper -- w3m -I UTF-8 -T text/html "$1"'
 
 [[plugin.prepend_previewers]]
 mime = "text/html"
 run  = 'piper -- w3m -I UTF-8 -T text/html "$1"'
-
-[[plugin.prepend_previewers]]
-mime = "application/epub+zip"
-run  = "epub-preview"
 
 [[plugin.prepend_previewers]]
 mime = "application/octet-stream"
@@ -152,3 +159,6 @@ run  = "video"
 url = "*.csv"
 run  = 'piper -- bat -p --color=always "$1"'
 
+[[plugin.prepend_preloaders]]
+mime = "video/*"
+run  = "video-preloader"

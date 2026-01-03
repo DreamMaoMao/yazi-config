@@ -19,6 +19,14 @@ require("keyjump"):setup({
 	}
 })
 
+require("findch"):setup({
+    match_str_fg = "#000000",
+    match_str_bg = "#EB7459",
+    header_color = "#EB7459",
+    mapdata = require("sjch").data,
+})
+
+
 require("easyjump"):setup({
 	icon_fg = "#fda1a1",
     first_key_fg = "#df6249"

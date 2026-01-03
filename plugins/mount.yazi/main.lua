@@ -193,6 +193,11 @@ function M:redraw()
 		end
 	end
 
+	if not self.title then
+		self.title = "Mount"
+		self.title_color = "#82ab3a"
+	end
+
 	return {
 		ui.Clear(self._area),
 		ui.Border(ui.Edge.ALL)

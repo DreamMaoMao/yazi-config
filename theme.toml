@@ -2,12 +2,17 @@
 
 # : Manager {{{
 
+# [app]
+# overall = { bg = "#000000" }
+
+[indicator]
+parent  = { fg = "#000000", bg = "#ac9259" }
+current = { fg = "#000000", bg = "#ac9259" }
+preview = { underline = true }
+padding = { open = "█", close = "█" }
+
 [mgr]
 cwd = { fg = "#cfc251" }
-
-# Hovered
-hovered         = { fg = "#000000", bg = "#ac9259" }
-preview_hovered = { underline = true }
 
 # Find
 find_keyword  = { fg = "#b32121", italic = true }

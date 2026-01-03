@@ -1423,7 +1423,7 @@ end)
 
 local get_data = ya.sync(function (state)
 	local mimes = {}
-	local unmatch_ext_urls = {}
+	local bool match = false;
 
 	local folder = cx.active.preview.folder
 	if not folder then
@@ -1440,14 +1440,14 @@ local get_data = ya.sync(function (state)
 		local ext_mime = ext_mime_map[ext]
 		if ext_mime then
 		  mimes[url] = ext_mime
+		  match = true;
 		  goto continue
 		end
 	  end
-	  unmatch_ext_urls[#unmatch_ext_urls + 1] = url
 	  ::continue::
 	end
 
-	return mimes
+	return mimes, match
 
 end)
 
@@ -1475,9 +1475,9 @@ local M = {
 }
 
 function M:entry()
-	local mimes =  get_data()
+	local mimes, match =  get_data()
 
-	if #mimes then
+	if match then
 		flush(mimes)
 	end
 end
