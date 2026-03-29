@@ -15,6 +15,7 @@ max_width       = 600
 max_height      = 900
 cache_dir       = ""
 image_delay     = 20
+image_bound      = [ 0, 0 ] 
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
