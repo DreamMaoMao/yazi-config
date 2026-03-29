@@ -14,7 +14,7 @@ tab_size        = 2
 max_width       = 600
 max_height      = 900
 cache_dir       = ""
-image_delay     = 5
+image_delay     = 20
 ueberzug_scale  = 1
 ueberzug_offset = [ 0, 0, 0, 0 ]
 
@@ -134,6 +134,9 @@ id   = "current-size"
 url = "*/"
 run  = "current-size"
 
+[[plugin.prepend_previewers]]
+url = "*.epub"
+run  = 'epub-preview'
 
 [[plugin.prepend_previewers]]
 url = "*.md"

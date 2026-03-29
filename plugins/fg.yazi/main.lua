@@ -9,7 +9,7 @@ local toggle_ui = ya.sync(function(self)
 end)
 
 local init_ui_data = ya.sync(function(self,file_url)
-	self.opt = {"nvim", "helix", "jump"}
+	self.opt = {"nvim", "jump"}
 	self.title = "fg"
 	self.title_color = "#82ab3a"
 	self.cursor = 0
@@ -146,7 +146,18 @@ function M:entry(job)
   	elseif ya.target_family() == "windows" then
 		cmd_args = [[rg --color=always --line-number --no-heading --smart-case "" | fzf --ansi --preview="]] .. preview_cmd .. [[" --delimiter=":" ]] .. preview_window .. [[ --nth="3.."]]
 	elseif args[1] == "fzf" then
-		cmd_args = [[fzf --preview="bat --color=always {}"]]
+		if shell_value == "fish" then
+		    -- Fish 使用 (math ...) 进行运算
+		    cmd_args = [[fzf --preview='file -b --mime-type {} | grep -q "^image/"; and begin; echo {}; echo; chafa -f sixels --size "$FZF_PREVIEW_COLUMNS"x(math $FZF_PREVIEW_LINES - 2) {} 2>/dev/null; end; or bat --color=always {}']]       
+		
+		elseif shell_value == "nu" then
+		    -- Nushell 使用 ($env.VAR | into int) 进行运算
+		    -- 注意：Nu 的预览命令需要确保 fzf 调用的是 nu
+		    cmd_args = [[fzf --preview='if (file -b --mime-type {} | str contains "image/") { echo {}; echo ""; let lines = (($env.FZF_PREVIEW_LINES | into int) - 2); chafa -f sixels --size $"($env.FZF_PREVIEW_COLUMNS)x($lines)" {} } else { bat --color=always {} }']]
+		
+		else
+		    -- Bash / Zsh 使用 $((...)) 进行运算
+			cmd_args = [[fzf --preview='if file -b --mime-type {} | grep -q "^image/"; then echo {}; echo; chafa -f sixels --size "${FZF_PREVIEW_COLUMNS}x$(($FZF_PREVIEW_LINES - 2))" {} 2>/dev/null; else bat --color=always {}; fi']]		end
 	elseif args[1] == "rg" and shell_value == "fish" then
 		cmd_args = [[
 			RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case " \
@@ -234,8 +245,6 @@ function M:entry(job)
 
 	if (default_action == "nvim" or get_option() == "nvim" ) and args[1] ~= "fzf" then
 		os.execute("nvim +"..line_number.." -n "..file_url)
-	elseif (default_action == "helix" or get_option() == "helix" ) and args[1] ~= "fzf" then
-		os.execute("helix +"..line_number.." "..file_url)
 	elseif (default_action == "jump" or get_option() == "jump" or args[1] == "fzf") and file_url ~= ""  then
 		ya.mgr_emit(file_url:match("[/\\]$") and "cd" or "reveal", { file_url })
 	else
@@ -250,8 +259,7 @@ function M:redraw()
 	local rows = {}
 
 	rows[1] = ui.Row { "open with nvim" }
-	rows[2] = ui.Row { "open with helix" }
-	rows[3] = ui.Row { "reach at yazi" }
+	rows[2] = ui.Row { "reach at yazi" }
 	return {
 		ui.Clear(self._area),
 		ui.Border(ui.Edge.ALL)
