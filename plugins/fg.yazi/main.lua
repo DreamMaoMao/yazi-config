@@ -148,16 +148,16 @@ function M:entry(job)
 	elseif args[1] == "fzf" then
 		if shell_value == "fish" then
 		    -- Fish 使用 (math ...) 进行运算
-		    cmd_args = [[fzf --preview='file -b --mime-type {} | grep -q "^image/"; and begin; echo {}; echo; chafa -f sixels --size "$FZF_PREVIEW_COLUMNS"x(math $FZF_PREVIEW_LINES - 2) {} 2>/dev/null; end; or bat --color=always {}']]       
+		    cmd_args = [[fzf --preview='file -b --mime-type {} | grep -q "^image/"; and begin; echo {}; echo; chafa --size "$FZF_PREVIEW_COLUMNS"x(math $FZF_PREVIEW_LINES - 2) {} 2>/dev/null; end; or bat --color=always {}']]       
 		
 		elseif shell_value == "nu" then
 		    -- Nushell 使用 ($env.VAR | into int) 进行运算
 		    -- 注意：Nu 的预览命令需要确保 fzf 调用的是 nu
-		    cmd_args = [[fzf --preview='if (file -b --mime-type {} | str contains "image/") { echo {}; echo ""; let lines = (($env.FZF_PREVIEW_LINES | into int) - 2); chafa -f sixels --size $"($env.FZF_PREVIEW_COLUMNS)x($lines)" {} } else { bat --color=always {} }']]
+		    cmd_args = [[fzf --preview='if (file -b --mime-type {} | str contains "image/") { echo {}; echo ""; let lines = (($env.FZF_PREVIEW_LINES | into int) - 2); chafa --size $"($env.FZF_PREVIEW_COLUMNS)x($lines)" {} } else { bat --color=always {} }']]
 		
 		else
 		    -- Bash / Zsh 使用 $((...)) 进行运算
-			cmd_args = [[fzf --preview='if file -b --mime-type {} | grep -q "^image/"; then echo {}; echo; chafa -f sixels --size "${FZF_PREVIEW_COLUMNS}x$(($FZF_PREVIEW_LINES - 2))" {} 2>/dev/null; else bat --color=always {}; fi']]		end
+			cmd_args = [[fzf --preview='if file -b --mime-type {} | grep -q "^image/"; then echo {}; echo; chafa --size "${FZF_PREVIEW_COLUMNS}x$(($FZF_PREVIEW_LINES - 2))" {} 2>/dev/null; else bat --color=always {}; fi']]		end
 	elseif args[1] == "rg" and shell_value == "fish" then
 		cmd_args = [[
 			RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case " \

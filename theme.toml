@@ -6,9 +6,9 @@
 # overall = { bg = "#000000" }
 
 [indicator]
-parent  = { fg = "#000000", bg = "#ac9259" }
-current = { fg = "#000000", bg = "#ac9259" }
-preview = { underline = true }
+parent  = { fg = "#000000", bg = "#ac9259"}
+current = { fg = "#000000", bg = "#ac9259"}
+preview = { underline = true, bold = true }
 padding = { open = "█", close = "█" }
 
 [mgr]
@@ -46,7 +46,7 @@ syntect_theme = "~/.config/yazi/bat-theme/Gruvbox-N.tmTheme"
 #
 
 [tabs]
-active   = { bg = "#AC9259",fg="#000000" }
+active   = { bg = "#AC9259",fg="#000000"}
 inactive = { fg = "#CAAA75", bg = "#201B14" }
 sep_inner = { open = "", close = "" }
 sep_outer = { open = "", close = "" }

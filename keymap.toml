@@ -22,6 +22,7 @@ keymap = [
 	{ on = [ "u","D" ],	run = "plugin bookmarks -- delete_all", desc = "Delete all bookmarks" },
 	{ on = [ "u","l"], run = "plugin lastopen -- jump",         desc = "jump to last open file" },
 	{ on = [ "u","n"], run = "plugin mount",         desc = "mount manager" },
+	{ on = [ "u", "o" ],       run = "plugin trash",     desc = "Go to trash bin" },
 
 	{ on = [ "I" ], run = "plugin keyjump -- global once", desc = "keyjump" },
 	{ on = [ "i" ], run = "plugin easyjump", desc = "easyjump" },
@@ -36,10 +37,8 @@ keymap = [
 	{ on = [ "z", "o" ], run = "linemode owner",       desc = "Set linemode to owner" },
 
 	{ on = [ "u","i" ],     run = "plugin cmd -- lazygit",              desc = "lazygit" },
-	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon x11" },
-	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon wayland" },
-	# { on = [ "u","w" ], run = '''shell ' GDK_BACKEND=wayland dragon -x -i -T "$1"' --confirm''',desc="dragon wayland" },
-	# { on = [ "u","r" ], run = '''shell ' GDK_BACKEND=x11 dragon -x -i -T "$1"' --confirm''',desc="dragon wayland" },
+	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p %h' --confirm''',desc="dragon x11" },
+	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p %h' --confirm''',desc="dragon wayland" },
 
 	{ on = [ "<Esc>" ], run = "escape", desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = [ "q" ],     run = "quit",   desc = "Exit the process" },
