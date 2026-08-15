@@ -16,7 +16,7 @@ end)
 local update_partitions = ya.sync(function(self, partitions)
 	self.partitions = partitions
 	self.title = "Mount"
-	self.title_color = "#82ab3a"
+	self.title_color = "#98c846"
 	self.cursor = math.max(0, math.min(self.cursor or 0, #self.partitions - 1))
 	ui.render()
 end)
@@ -195,7 +195,7 @@ function M:redraw()
 
 	if not self.title then
 		self.title = "Mount"
-		self.title_color = "#82ab3a"
+		self.title_color = "#98c846"
 	end
 
 	return {
@@ -203,13 +203,13 @@ function M:redraw()
 		ui.Border(ui.Edge.ALL)
 			:area(self._area)
 			:type(ui.Border.ROUNDED)
-			:style(ui.Style():fg("#82ab3a"))
-			:title(ui.Line(self.title):align(ui.Align.CENTER):fg(self.title_color and self.title_color or "#82ab3a")),
+			:style(ui.Style():fg("#98c846"))
+			:title(ui.Line(self.title):align(ui.Align.CENTER):fg(self.title_color and self.title_color or "#98c846")),
 		ui.Table(rows)
 			:area(self._area:pad(ui.Pad(1, 2, 1, 2)))
 			:header(ui.Row({ "Src", "Label", "Dist", "FSType" }):style(ui.Style():bold()))
 			:row(self.cursor)
-			:row_style(ui.Style():fg("#82ab3a"):underline())
+			:row_style(ui.Style():fg("#98c846"):underline())
 			:widths {
 				ui.Constraint.Length(20),
 				ui.Constraint.Length(20),

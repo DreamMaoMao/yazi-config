@@ -22,6 +22,7 @@ keymap = [
 	{ on = [ "u","D" ],	run = "plugin bookmarks -- delete_all", desc = "Delete all bookmarks" },
 	{ on = [ "u","l"], run = "plugin lastopen -- jump",         desc = "jump to last open file" },
 	{ on = [ "u","n"], run = "plugin mount",         desc = "mount manager" },
+	{ on = [ "u", "o" ],       run = "plugin trash",     desc = "Go to trash bin" },
 
 	{ on = [ "I" ], run = "plugin keyjump -- global once", desc = "keyjump" },
 	{ on = [ "i" ], run = "plugin easyjump", desc = "easyjump" },
@@ -36,10 +37,8 @@ keymap = [
 	{ on = [ "z", "o" ], run = "linemode owner",       desc = "Set linemode to owner" },
 
 	{ on = [ "u","i" ],     run = "plugin cmd -- lazygit",              desc = "lazygit" },
-	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon x11" },
-	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p "$1"' --confirm''',desc="dragon wayland" },
-	# { on = [ "u","w" ], run = '''shell ' GDK_BACKEND=wayland dragon -x -i -T "$1"' --confirm''',desc="dragon wayland" },
-	# { on = [ "u","r" ], run = '''shell ' GDK_BACKEND=x11 dragon -x -i -T "$1"' --confirm''',desc="dragon wayland" },
+	{ on = [ "u","f" ], run = '''shell ' QT_QPA_PLATFORM=xcb ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p %h' --confirm''',desc="dragon x11" },
+	{ on = [ "u","w" ], run = '''shell ' QT_QPA_PLATFORM=wayland ~/deskenv/archieve/qxdrag/qxdrag.py -x -e -b -p %h' --confirm''',desc="dragon wayland" },
 
 	{ on = [ "<Esc>" ], run = "escape", desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = [ "q" ],     run = "quit",   desc = "Exit the process" },
@@ -83,7 +82,7 @@ keymap = [
 	{ on = [ "<C-r>" ],   run = "toggle_all --state=none",            desc = "Inverse selection of all files" },
 
 	# Operation
-	{ on = [ "u","s"], 	run = '''shell "$SHELL" --block --confirm''', desc = "Open shell here" },
+	{ on = [ "u","s"], 	run = 'plugin cmd -- fish', desc = "Open shell here" },
 	{ on = [ "o" ],         run = "open --interactive --hovered",     desc = "Open the currsor hovered files interactively" },
 	# { on = [ "O" ],   		run = "open",                   desc = "Open the selected files" },
 	# { on = [ "<Enter>" ],   run = "open --hovered",         desc = "Open the currsor hovered files" },
@@ -121,7 +120,7 @@ keymap = [
 
 	# Copy
 	{ on = [ "c", "c" ], run = "copy path",             desc = "cp absolute path" },
-	{ on = [ "c", "d" ], run = "copy dirname",          desc = "cp parent path" },
+	{ on = [ "c", "d" ], run = "copy dirpath",          desc = "cp parent path" },
 	{ on = [ "c", "f" ], run = "copy filename",         desc = "cp filename" },
 	{ on = [ "c", "n" ], run = "copy name_without_ext", desc = "cp filename without ext" },
 

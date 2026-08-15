@@ -1127,6 +1127,7 @@ local ext_mime_map = {
 	["vpm"] = "multipart/voice-message",
 	["appcache"] = "text/cache-manifest",
 	["manifest"] = "text/cache-manifest",
+	["srt"] = "text/srt",
 	["ics"] = "text/calendar",
 	["ifb"] = "text/calendar",
 	["CQL"] = "text/cql",

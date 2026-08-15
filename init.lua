@@ -96,6 +96,7 @@ require("session"):setup({
 require("lastopen"):setup({
   -- cache_path = '/home/wrq/lastopencache',
 })
+
 require("mime-ext.local"):setup {
 	-- Expand the existing filename database (lowercase), for example:
 	with_files = {

@@ -1,4 +1,4 @@
---- @since 25.12.29
+--- @since 26.5.6
 --- See https://www.iana.org/assignments/media-types/media-types.xhtml
 
 local FILES = {
@@ -42,6 +42,7 @@ local EXTS = {
 	afm = "application/font-type1",
 	afp = "application/ibm.modcap",
 	ahead = "application/ahead.space",
+	ahk = "text/plain",
 	ai = "application/postscript",
 	aif = "audio/aiff",
 	aifc = "audio/aiff",
@@ -1084,61 +1085,51 @@ function M:setup(opts)
 end
 
 function M:fetch(job)
-	local opts = options()
-	local merged_files = ya.dict_merge(FILES, opts.with_files or {})
-	local merged_exts = ya.dict_merge(EXTS, opts.with_exts or {})
+	return ya.co(function()
+		local opts = options()
+		local merged_files = ya.dict_merge(FILES, opts.with_files or {})
+		local merged_exts = ya.dict_merge(EXTS, opts.with_exts or {})
 
-	local updates, unknown, state = {}, {}, {}
-	for i, file in ipairs(job.files) do
-		if file.cha.is_dummy then
-			state[i] = false
-			goto continue
+		local updates, unknown = {}, {}
+		for _, file in ipairs(job.files) do
+			if file.cha.is_dummy then
+				coroutine.yield(file, {})
+				goto continue
+			end
+
+			local mime
+			if file.cha.len == 0 then
+				mime = "inode/empty"
+			else
+				mime = merged_files[(file.url.name or ""):lower()]
+				mime = mime or merged_exts[(file.url.ext or ""):lower()]
+			end
+
+			if mime then
+				if coroutine.yield(file, { mime }) then
+					updates[file.url] = mime
+				end
+			elseif opts.fallback_file1 then
+				unknown[#unknown + 1] = file
+			elseif coroutine.yield(file, { "application/octet-stream" }) then
+				updates[file.url] = "application/octet-stream"
+			end
+			::continue::
 		end
 
-		local mime
-		if file.cha.len == 0 then
-			mime = "inode/empty"
-		else
-			mime = merged_files[(file.url.name or ""):lower()]
-			mime = mime or merged_exts[(file.url.ext or ""):lower()]
+		require("mime.dir").commit(updates)
+		if #unknown > 0 then
+			self.fallback_builtin(job, unknown)
 		end
-
-		if mime then
-			updates[file.url], state[i] = mime, true
-		elseif opts.fallback_file1 then
-			unknown[#unknown + 1] = file
-		else
-			updates[file.url], state[i] = "application/octet-stream", true
-		end
-		::continue::
-	end
-
-	if next(updates) then
-		ya.emit("update_mimes", { updates = updates })
-	end
-
-	if #unknown > 0 then
-		return self.fallback_builtin(job, unknown, state)
-	end
-
-	return state
+	end)
 end
 
-function M.fallback_builtin(job, unknown, state)
-	local indices = {}
-	for i, f in ipairs(job.files) do
-		indices[f:hash()] = i
+function M.fallback_builtin(job, unknown)
+	local next = require("mime.local"):fetch(ya.dict_merge(job, { files = unknown }))
+	local file, result = next()
+	while file do
+		file, result = next(coroutine.yield(file, result))
 	end
-
-	local result = require("mime.local"):fetch(ya.dict_merge(job, { files = unknown }))
-	for i, f in ipairs(unknown) do
-		if type(result) == "table" then
-			state[indices[f:hash()]] = result[i]
-		else
-			state[indices[f:hash()]] = result
-		end
-	end
-	return state
 end
 
 return M

@@ -39,16 +39,16 @@ local function delete_lines_by_content(file_path, pattern)
     file:close()
 end
 
--- save table to file
+-- save table to file (新增 action 字段)
 local save_to_file = ya.sync(function(state,filename)
     local file = io.open(filename, "w+")
 	for i, f in ipairs(state.bookmarks) do
-		file:write(string.format("%s###%s###%s###%s",f.on,f.file_url,f.desc,f.isdir), "\n")
+		file:write(string.format("%s###%s###%s###%s###%s",f.on,f.file_url,f.desc,f.isdir,f.action or "reveal"), "\n")
 	end
     file:close()
 end)
 
--- load from file to state
+-- load from file to state (兼容旧4字段)
 local load_file_to_state = ya.sync(function(state,filename)
 
 	if state.bookmarks == nil then 
@@ -68,11 +68,16 @@ local load_file_to_state = ya.sync(function(state,filename)
 		if bookmark == nil or #bookmark < 4 then
 			goto nextline
 		end
+		local action = "reveal"
+		if #bookmark >= 5 then
+			action = bookmark[5]
+		end
 		state.bookmarks[#state.bookmarks + 1] = {
 			on = bookmark[1],
 			file_url = bookmark[2],
 			desc = bookmark[3],
 			isdir = bookmark[4],
+			action = action,
 		}
 
 		::nextline::
@@ -82,7 +87,7 @@ end)
 
 
 
-local save_bookmark = ya.sync(function(state,message,key)
+local save_bookmark = ya.sync(function(state,message,key,action)
 
 	local under_cursor_file = cx.active.current.hovered
 
@@ -103,6 +108,7 @@ local save_bookmark = ya.sync(function(state,message,key)
 		file_url = tostring(under_cursor_file.url),
 		desc = tostring(message),
 		isdir = tostring(under_cursor_file.cha.is_dir),
+		action = action,
 	}
 
 	ya.notify {
@@ -242,6 +248,19 @@ local function get_bind_key()
 	end
 end
 
+-- 新增：询问跳转方式
+local function get_jump_action()
+	local choices = {
+		{ on = "reveal", desc = "reveal" },
+		{ on = "cd", desc = "cd" },
+	}
+	local selected = ya.which { cands = choices }
+	if selected == nil then
+		return nil
+	end
+	return choices[selected].on
+end
+
 return {
 	entry = function(_,job)
 		local args = job.args
@@ -263,7 +282,11 @@ return {
 				if key == nil then
 					return
 				end
-				save_bookmark(value,key)
+				local jump_action = get_jump_action()
+				if jump_action == nil then
+					return
+				end
+				save_bookmark(value,key,jump_action)
 			end
 			return
 		end
@@ -298,7 +321,11 @@ return {
 				return
 			end
 
-			ya.emit(bookmarks[selected].isdir == "true" and "cd" or "reveal", { bookmarks[selected].file_url })
+			local bookmark = bookmarks[selected]
+			local target_action = bookmark.action or "reveal"
+
+			-- 保持原参数格式：将路径放入 table 中
+			ya.emit(target_action, { bookmark.file_url })
 
 			return
 		elseif action == "delete" then

@@ -120,9 +120,18 @@ local M = {
 	end,
 }
 
-function M:fetch()
-	update_current_size()	
-	return false
+local function fetch_compact(job)
+	return ya.co(function()
+		update_current_size()
+
+		for _, file in ipairs(job.files) do
+			coroutine.yield(file, {})
+		end
+	end)
+end
+
+function M:fetch(job)
+	return fetch_compact(job)
 end
 
 return M
